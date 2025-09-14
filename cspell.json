@@ -1,0 +1,30 @@
+{
+    "version": "0.2",
+    "ignorePaths": [],
+    "dictionaryDefinitions": [],
+    "dictionaries": [],
+    "words": [
+        "abstractmethod",
+        "deleter",
+        "deleters",
+        "Wachowski"
+    ],
+    "ignoreWords": [
+        "Brvuum",
+        "Coddy",
+        "argumemts",
+        "attrubute",
+        "classmethod",
+        "dunder",
+        "floordiv",
+        "getitem",
+        "kwargs",
+        "pythonic",
+        "setitem",
+        "staticmethod",
+        "strikethrough",
+        "subclassing",
+        "truediv"
+    ],
+    "import": []
+}
