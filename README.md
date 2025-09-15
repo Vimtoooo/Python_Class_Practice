@@ -1607,3 +1607,123 @@ True
 **Key Point:** Mixins provide a way to share functionality across different class hierarchies without creating complex inheritance trees. They allow you to "mix in" specific capabilities like serialization, comparison, or printing to any class that needs them. This promotes code reuse and keeps classes focused on their primary responsibilities.
 
 Examples of mixins in practice.py, lines 1120 - 1316.
+
+### Static and Class Methods:
+
+Besides regular instance methods, classes can have static methods and class methods that serve different purposes. Here is an example of a static method:
+
+```json
+class MathHelper:
+    @staticmethod
+    def add(a, b):
+        return a + b
+
+    @staticmethod
+    def is_even(number):
+        return number % 2 == 0
+```
+
+Static methods don't need neither the `self` or the `cls` parameter since they work like regular functions. You can call them directly from the class:
+
+```json
+result = MathHelper.add(5, 3)
+print(result) # 8
+
+check = MathHelper.is_even(10)
+print(check) # True
+```
+
+Now, here is an example of a class method:
+
+```json
+class Person:
+    count = 0  # Class variable / class attribute
+
+    def __init__(self, name):
+        self.name = name
+        Person.count += 1
+
+    @classmethod
+    def get_count(cls): # This takes the "cls" parameter!
+        return cls.count
+
+    @classmethod
+    def create_anonymous(cls):
+        return cls("Anonymous")
+```
+
+The class methods can take both instances or classes for accessing the class methods with `cls` as the first parameter.
+
+```json
+person1 = Person("Alice")
+person2 = Person("Bob")
+print(Person.get_count())  # 2
+```
+
+Use class methods all alternative constructors!
+
+```json
+anonymous = Person.create_anonymous()
+print(anonymous.name)      # Anonymous
+print(Person.get_count())  # 3
+```
+
+Compare **all three method types** in **one class:**
+
+```json
+class Calculator:
+    brand = "Python Calc" # Class attribute
+
+    def __init__(self, owner):
+        self.owner = owner
+
+    # Normal instance method - needs self, accesses instance data
+    def show_owner(self):
+        return f"Owned by {self.owner}"
+
+    # Class method - needs cls, accesses class data
+    @classmethod
+    def get_brand(cls):
+        return cls.brand
+
+    # Static method - needs neither, just a utility function
+    @staticmethod
+    def multiply(x, y):
+        return x * y
+
+calc = Calculator("Alice")
+print(calc.show_owner())        # Owned by Alice
+print(Calculator.get_brand())   # Python Calc
+print(Calculator.multiply(4, 5)) # 20
+```
+
+Overall output:
+
+```json
+8
+True
+2
+Anonymous
+3
+Owned by Alice
+Python Calc
+20
+```
+
+You can call class and static methods with instances too!
+
+```json
+calc = Calculator("Bob")
+print(calc.get_brand())      # Python Calc (class method)
+print(calc.multiply(2, 3))   # 6 (static method)
+```
+
+#### **KEY DIFFERENCES:**
+
+- **Instance Methods:** Need `self` to access instance data;
+- **Class Methods:** Need `cls` to access class data, also good for alternative constructors;
+- **Static Methods:** Need neither, just utility functions related to the class.
+
+**KEY POINT:** Use the decorators `@staticmethod` for **utility functions** that belong logically in the class but won't need class or instance data. Use `@classmethod` when you need **access to the class directly**, like for alternative constructors or accessing class attributes.
+
+More examples in practice.py lines 1319 - 1417.
