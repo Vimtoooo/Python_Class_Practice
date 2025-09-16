@@ -1612,6 +1612,8 @@ Examples of mixins in practice.py, lines 1120 - 1316.
 
 Besides regular instance methods, classes can have static methods and class methods that serve different purposes. Here is an example of a static method:
 
+#### @staticmethod:
+
 ```json
 class MathHelper:
     @staticmethod
@@ -1634,6 +1636,8 @@ print(check) # True
 ```
 
 Now, here is an example of a class method:
+
+#### @classmethod:
 
 ```json
 class Person:
@@ -1727,3 +1731,100 @@ print(calc.multiply(2, 3))   # 6 (static method)
 **KEY POINT:** Use the decorators `@staticmethod` for **utility functions** that belong logically in the class but won't need class or instance data. Use `@classmethod` when you need **access to the class directly**, like for alternative constructors or accessing class attributes.
 
 More examples in practice.py lines 1319 - 1417.
+
+### Class Decorators:
+
+Class decorators allows you to **modify and enhance class by wrapping them with another defined function(s**) (like nested `def` functions), They work like function decorators but they are applied to entire classes.
+
+#### Simple Class (no decorators):
+
+Here is a simple class with no decorators:
+
+```json
+class Person:
+    def __init__(self, name):
+        self.name = name
+
+    def greet(self):
+        return f"Hello, my name is {self.name}"
+```
+
+#### With a class decorator:
+
+We create a new class decorator that adds a new method:
+
+```json
+def add_farewell(cls):
+    def farewell(self):
+        return f"Goodbye from {self.name}"
+
+    cls.farewell = farewell  # Add the method to the class
+    return cls
+```
+
+Then apply the decorator to the class using the '@' at-sign:
+
+```json
+@add_farewell
+class EnhancedPerson:
+    def __init__(self, name):
+        self.name = name
+
+    def greet(self):
+        return f"Hello, my name is {self.name}"
+```
+
+Now, the `EnhancedPerson` class has its original method and an added method:
+
+```json
+person = EnhancedPerson("Alice")
+print(person.greet())     # Hello, my name is Alice
+print(person.farewell())  # Goodbye from Alice
+```
+
+##### Purpose & Importance:
+
+- **Enhance or modify class behavior** without changing the original class code;
+- **Add new methods** or **attributes** to a class dynamically;
+- **Implement cross-cutting concerns**, like logging, validation, registration in a reusable way;
+- **Promote code reuse and separation of concerns** by keeping enhancements outside the main class definition.
+
+##### Example of a Class Decorator in use:
+
+```json
+def add_repr(cls):              # Outer function takes the class as an argument
+    def __repr__(self):         # New method to add
+        return f"{cls.__name__}({self.__dict__})"
+    cls.__repr__ = __repr__     # Attach method to the class
+    return cls                  # Return the modified class
+
+@add_repr
+class User:
+    def __init__(self, name):
+        self.name = name
+
+u = User("Alice")
+print(repr(u))  # Output: User({'name': 'Alice'})
+```
+
+In a class decorator, the outer def function takes the class as its argument, modifies or enhances it (for example, by adding methods or attributes), and then returns the modified class.
+
+##### **Key Characteristics:**
+
+- Applied with `@decorator_name` above the class definition;
+- Can add, modify, or wrap class methods and attributes;
+- Work at the class level, not the instance level;
+- Useful for metaprogramming and dry code.
+
+#### Summary Table:
+
+| **Aspect**  | **Class Decorators**                            |
+| :---------: | ----------------------------------------------- |
+|    Usage    | To modify or enhance classes dynamically.       |
+|   Syntax    | `@decorator_name` above the class definition.   |
+| Flexibility | Add methods, attributes, behaviors and etc.     |
+| Importance  | For reusability, cleaning, separation of logic. |
+
+**KEY POINT:** Class decorators take a class as input, modify or enhance it, and return the modified class. They can add methods, modify attributes, or wrap existing functionality. Use the `@decorator_name` above the class definition to apply then, this provides a **clean way to extend class functionality without inheritance!**
+
+There is a complex example of class decorators in practice.py between lines 1419 - 1564.

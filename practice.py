@@ -1346,72 +1346,219 @@ class Temperature:
 
 
 # Test case handler for comprehensive testing
+# test_case = input()
+
+# if test_case == "default_test":
+#     # Test basic functionality
+#     Temperature.celsius_readings = []
+#     Temperature.add_reading(25)
+#     Temperature.add_reading(30)
+#     Temperature.add_reading(27)
+    
+#     print(f"Average reading: {Temperature.average_reading()}")
+#     print(f"22°C is {Temperature.celsius_to_fahrenheit(22)}°F")
+
+# elif test_case == "empty_readings":
+#     # Test average_reading with no readings
+#     Temperature.celsius_readings = []
+#     print(f"Average reading: {Temperature.average_reading()}")
+
+# elif test_case == "single_reading":
+#     # Test with a single reading
+#     Temperature.celsius_readings = []
+#     Temperature.add_reading(100)
+#     print(f"Average reading: {Temperature.average_reading()}")
+
+# elif test_case == "negative_values":
+#     # Test with negative temperature values
+#     Temperature.celsius_readings = []
+#     Temperature.add_reading(-10)
+#     Temperature.add_reading(-20)
+#     Temperature.add_reading(-30)
+#     print(f"Average reading: {Temperature.average_reading()}")
+#     print(f"-15°C is {Temperature.celsius_to_fahrenheit(-15)}°F")
+
+# elif test_case == "zero_value":
+#     # Test with a reading of 0°C
+#     print(f"0°C is {Temperature.celsius_to_fahrenheit(0)}°F")
+
+# elif test_case == "extreme_values":
+#     # Test with extreme temperature values
+#     absolute_zero = -273.15  # absolute zero in Celsius
+#     sun_surface = 5500  # approximate sun surface temperature in Celsius
+    
+#     print(f"{absolute_zero}°C is {Temperature.celsius_to_fahrenheit(absolute_zero)}°F")
+#     print(f"{sun_surface}°C is {Temperature.celsius_to_fahrenheit(sun_surface)}°F")
+
+# elif test_case == "reset_readings":
+#     # Test resetting the readings
+#     Temperature.celsius_readings = []
+#     Temperature.add_reading(10)
+#     Temperature.add_reading(20)
+#     Temperature.add_reading(30)
+#     print(f"Average reading before reset: {Temperature.average_reading()}")
+    
+#     Temperature.celsius_readings = []
+#     print(f"Average reading after reset: {Temperature.average_reading()}")
+
+# elif test_case == "decimal_values":
+#     # Test with decimal values
+#     Temperature.celsius_readings = []
+#     Temperature.add_reading(36.5)  # Normal body temperature
+#     Temperature.add_reading(37.2)  # Slight fever
+#     Temperature.add_reading(36.9)  # Normal variation
+#     print(f"Average reading: {Temperature.average_reading()}")
+
+# elif test_case == "many_readings":
+#     # Test with many readings
+#     Temperature.celsius_readings = []
+#     for i in range(1, 101):
+#         Temperature.add_reading(i)
+#     print(f"Average reading with 100 values: {Temperature.average_reading()}")
+
+# Class decorators in action!
+def add_counter(cls):
+    # TODO: Initialize the call_counts dictionary with keys "add" and "subtract" both starting at 0
+    cls.call_counts = {"add": 0, "subtract": 0}
+    
+    # TODO: Store original methods
+    # Store the original add method from the class
+    original_add = cls.add # Replace with actual code (this variable will now store the functionality from the add method in the calculator class!)
+    
+    # Store the original subtract method from the class
+    original_subtract = cls.subtract  # Replace with actual code (same principle is applied here...)
+    
+    # TODO: Define wrapped methods that increment counters and preserve original functionality
+    def wrapped_add(self, a, b):
+        # TODO: Increment the "add" counter in call_counts
+        # HINT: Use self.__class__.call_counts to access the class attribute
+        self.__class__.call_counts["add"] += 1
+        # TODO: Call the original add method and return its result
+        return original_add(self, a, b) # Calls the utility method to return the operation results
+    
+    def wrapped_subtract(self, a, b):
+        # TODO: Increment the "subtract" counter in call_counts
+        # HINT: Use self.__class__.call_counts to access the class attribute
+        self.__class__.call_counts["subtract"] += 1
+        # TODO: Call the original subtract method and return its result
+        return original_subtract(self, a, b)
+    
+    # TODO: Replace original methods with wrapped versions
+    # Replace the add method with wrapped_add
+    cls.add = wrapped_add # Not only it will replace the add method, but it will also add extra functionality by calling the wrapped add method!
+    # Replace the subtract method with wrapped_subtract
+    cls.subtract = wrapped_subtract
+    # TODO: Return the modified class
+    return cls # Return the new enhanced class! (Now this class will automatically contain extra functionality inside its codebase)
+
+# TODO: Apply the add_counter decorator to the Calculator class
+# Use the @add_counter syntax above the class definition
+@add_counter
+class Calculator:
+    def __init__(self):
+        pass
+        
+    def add(self, a, b):
+        # TODO: Implement the add method that returns the sum of a and b
+        return a + b
+        
+    def subtract(self, a, b):
+        # TODO: Implement the subtract method that returns the difference of a and b
+        return a - b
+
+# Comprehensive test case handler
 test_case = input()
 
-if test_case == "default_test":
-    # Test basic functionality
-    Temperature.celsius_readings = []
-    Temperature.add_reading(25)
-    Temperature.add_reading(30)
-    Temperature.add_reading(27)
+if test_case == "basic_functionality":
+    calc = Calculator()
+    print(calc.add(5, 3))  # Should print 8
+    print(calc.add(2, 7))  # Should print 9
+    print(calc.subtract(10, 4))  # Should print 6
+    print(calc.call_counts)  # Should print {'add': 2, 'subtract': 1}
+
+elif test_case == "multiple_instances":
+    calc1 = Calculator()
+    calc2 = Calculator()
     
-    print(f"Average reading: {Temperature.average_reading()}")
-    print(f"22°C is {Temperature.celsius_to_fahrenheit(22)}°F")
+    print(calc1.add(5, 3))  # Should print 8
+    print(calc2.add(2, 7))  # Should print 9
+    print(calc1.subtract(10, 4))  # Should print 6
+    
+    # Both instances should share the same call_counts
+    print(calc1.call_counts)  # Should print {'add': 2, 'subtract': 1}
+    print(calc2.call_counts)  # Should print {'add': 2, 'subtract': 1}
+    print(calc1.call_counts is calc2.call_counts)  # Should print True
 
-elif test_case == "empty_readings":
-    # Test average_reading with no readings
-    Temperature.celsius_readings = []
-    print(f"Average reading: {Temperature.average_reading()}")
+elif test_case == "method_call_order":
+    calc = Calculator()
+    
+    print(calc.add(1, 2))  # Should print 3
+    print(calc.subtract(5, 2))  # Should print 3
+    print(calc.add(10, 20))  # Should print 30
+    print(calc.add(7, 3))  # Should print 10
+    print(calc.call_counts)  # Should print {'add': 3, 'subtract': 1}
 
-elif test_case == "single_reading":
-    # Test with a single reading
-    Temperature.celsius_readings = []
-    Temperature.add_reading(100)
-    print(f"Average reading: {Temperature.average_reading()}")
+elif test_case == "large_values":
+    calc = Calculator()
+    
+    print(calc.add(1000000, 2000000))  # Should print 3000000
+    print(calc.subtract(5000000, 2000000))  # Should print 3000000
+    print(calc.call_counts)  # Should print {'add': 1, 'subtract': 1}
 
 elif test_case == "negative_values":
-    # Test with negative temperature values
-    Temperature.celsius_readings = []
-    Temperature.add_reading(-10)
-    Temperature.add_reading(-20)
-    Temperature.add_reading(-30)
-    print(f"Average reading: {Temperature.average_reading()}")
-    print(f"-15°C is {Temperature.celsius_to_fahrenheit(-15)}°F")
-
-elif test_case == "zero_value":
-    # Test with a reading of 0°C
-    print(f"0°C is {Temperature.celsius_to_fahrenheit(0)}°F")
-
-elif test_case == "extreme_values":
-    # Test with extreme temperature values
-    absolute_zero = -273.15  # absolute zero in Celsius
-    sun_surface = 5500  # approximate sun surface temperature in Celsius
+    calc = Calculator()
     
-    print(f"{absolute_zero}°C is {Temperature.celsius_to_fahrenheit(absolute_zero)}°F")
-    print(f"{sun_surface}°C is {Temperature.celsius_to_fahrenheit(sun_surface)}°F")
+    print(calc.add(-5, -3))  # Should print -8
+    print(calc.subtract(-10, -4))  # Should print -6
+    print(calc.call_counts)  # Should print {'add': 1, 'subtract': 1}
 
-elif test_case == "reset_readings":
-    # Test resetting the readings
-    Temperature.celsius_readings = []
-    Temperature.add_reading(10)
-    Temperature.add_reading(20)
-    Temperature.add_reading(30)
-    print(f"Average reading before reset: {Temperature.average_reading()}")
+elif test_case == "float_values":
+    calc = Calculator()
     
-    Temperature.celsius_readings = []
-    print(f"Average reading after reset: {Temperature.average_reading()}")
+    print(calc.add(5.5, 3.2))  # Should print 8.7
+    print(calc.subtract(10.5, 4.2))  # Should print 6.3
+    print(calc.call_counts)  # Should print {'add': 1, 'subtract': 1}
 
-elif test_case == "decimal_values":
-    # Test with decimal values
-    Temperature.celsius_readings = []
-    Temperature.add_reading(36.5)  # Normal body temperature
-    Temperature.add_reading(37.2)  # Slight fever
-    Temperature.add_reading(36.9)  # Normal variation
-    print(f"Average reading: {Temperature.average_reading()}")
+elif test_case == "zero_values":
+    calc = Calculator()
+    
+    print(calc.add(0, 0))  # Should print 0
+    print(calc.subtract(0, 0))  # Should print 0
+    print(calc.call_counts)  # Should print {'add': 1, 'subtract': 1}
 
-elif test_case == "many_readings":
-    # Test with many readings
-    Temperature.celsius_readings = []
-    for i in range(1, 101):
-        Temperature.add_reading(i)
-    print(f"Average reading with 100 values: {Temperature.average_reading()}")
+elif test_case == "counter_reset":
+    calc = Calculator()
+    
+    print(calc.add(5, 3))  # Should print 8
+    print(calc.call_counts)  # Should print {'add': 1, 'subtract': 0}
+    
+    # Reset the counter
+    calc.call_counts = {"add": 0, "subtract": 0}
+    
+    print(calc.add(2, 7))  # Should print 9
+    print(calc.call_counts)  # Should print {'add': 1, 'subtract': 0}
+
+elif test_case == "counter_manipulation":
+    calc = Calculator()
+    
+    print(calc.add(5, 3))  # Should print 8
+    print(calc.call_counts)  # Should print {'add': 1, 'subtract': 0}
+    
+    # Manipulate the counter directly
+    calc.call_counts["add"] = 100
+    
+    print(calc.add(2, 7))  # Should print 9
+    print(calc.call_counts)  # Should print {'add': 101, 'subtract': 0}
+
+elif test_case == "performance_test":
+    calc = Calculator()
+    
+    # Perform 1000 add operations
+    for i in range(1000):
+        calc.add(i, i+1)
+    
+    # Perform 500 subtract operations
+    for i in range(500):
+        calc.subtract(i+10, i)
+    
+    print(calc.call_counts)  # Should print {'add': 1000, 'subtract': 500}
