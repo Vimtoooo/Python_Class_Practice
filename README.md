@@ -1828,3 +1828,135 @@ In a class decorator, the outer def function takes the class as its argument, mo
 **KEY POINT:** Class decorators take a class as input, modify or enhance it, and return the modified class. They can add methods, modify attributes, or wrap existing functionality. Use the `@decorator_name` above the class definition to apply then, this provides a **clean way to extend class functionality without inheritance!**
 
 There is a complex example of class decorators in practice.py between lines 1419 - 1564.
+
+### Context Managers:
+
+Context managers allow you to **allocate and release resources precisely** when needed, they ensure **proper cleanup** even if errors occur. Here is the most common example using the `with` statement:
+
+#### Most Common Use Example:
+
+```json
+with open('example.txt', 'w') as file:
+    file.write('Hello, world!')
+# File is automatically closed here
+```
+
+The file is automatically closed after the indented block of code, even if an exception occurs!
+We can implement our own context manager using the dunder methods `__enter__` and `__exit__` methods:
+
+#### With the `__enter__` and `__exit__` Magic Methods:
+
+```json
+class MyContext:
+    def __enter__(self):
+        print("Entering the context")
+        return self # Return self to allow context variable assignment
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print("Exiting the context")
+        return False  # Don't suppress exceptions (return true if you suppose to!)
+```
+
+#### Custom Context Manager:
+
+Then, you could use your custom context manager:
+
+```json
+with MyContext() as ctx:
+    print("Inside the context")
+```
+
+Output:
+
+```json
+Entering the context
+Inside the context
+Exiting the context
+```
+
+#### Complex examples with a Database:
+
+Create a more practical context manager for database connections!
+
+```json
+class DatabaseConnection:
+    def __init__(self, db_name):
+        self.db_name = db_name
+        self.connection = None
+
+    def __enter__(self):
+        print(f"Connecting to {self.db_name}")
+        self.connection = f"Connection to {self.db_name}"
+        return self.connection
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print(f"Closing connection to {self.db_name}")
+        self.connection = None
+
+with DatabaseConnection("users_db") as conn:
+    print(f"Using {conn}")
+    print("Performing database operations...")
+```
+
+#### Handling exceptions in Context Managers:
+
+And we will have to handle exceptions in context managers:
+
+```json
+class SafeContext:
+    def __enter__(self):
+        print("Setting up resources")
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print("Cleaning up resources")
+        if exc_type:
+            print(f"An exception occurred: {exc_val}")
+        return False  # Don't suppress the exception
+
+with SafeContext():
+    print("Working with resources")
+    # raise ValueError("Something went wrong")  # Uncomment to test
+```
+
+Outputs:
+
+```json
+Connecting to users_db
+Using Connection to users_db
+Performing database operations...
+Closing connection to users_db
+Setting up resources
+Working with resources
+Cleaning up resources
+```
+
+#### The `__enter__` Method:
+
+- Runs at the start of the `with` block and sets up resources.
+
+#### The `__exit__` Method:
+
+Note that the `__exit__` dunder method receives three parameters:
+
+- `exc_type`: Exception type (or `None`);
+- `exc_val`: Exception value (or `None`);
+- `exc_tb`: Exception traceback (or `None`).
+
+#### Key Characteristics:
+
+- Used with the `with` statement;
+- Implement `__enter__` and `__exit__`;
+- Can handle exceptions gracefully;
+- Promote robust, maintainable code.
+
+##### Importance im OOP:
+
+- **Resource Management:** Ensures files, networks connections, locks, ... are always released;
+- **Error Safety:** Cleanup happens even if exceptions occur;
+- ** Cleaner Code:** Reduces boilerplate and manual cleanup;
+- **Encapsulation:** Bundles setup and teardown logic inside a class.
+
+**KEY POINT:** Context Managers use `__enter__` and `__exit__` methods to **manage resources**, the `with` statement **automatically calls these methods**, ensuring proper setup and cleanup. This is especially used for files, database connections and other resources that need guaranteed cleanup.
+
+Example of a Context Manager to be found in practice.py lines 1567 - 1590.
