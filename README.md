@@ -1960,3 +1960,266 @@ Note that the `__exit__` dunder method receives three parameters:
 **KEY POINT:** Context Managers use `__enter__` and `__exit__` methods to **manage resources**, the `with` statement **automatically calls these methods**, ensuring proper setup and cleanup. This is especially used for files, database connections and other resources that need guaranteed cleanup.
 
 Example of a Context Manager to be found in practice.py lines 1567 - 1590.
+
+## Advanced Arguments:
+
+### The `*args`:
+
+The `*args` parameter allows a method to accept any number of positional arguments, where the **asterisk '\*'** collects all extra positional arguments into a tuple. Here is an example of a method using the `*args` parameter:
+
+#### Basic Usage of the `*args` parameter:
+
+```json
+class Calculator:
+    def add_numbers(self, *args):
+        return sum(args)
+
+    def show_numbers(self, *args):
+        for i, num in enumerate(args):
+            print(f"Number {i+1}: {num}")
+```
+
+We can call the methods with different numbers of arguments:
+
+```json
+calc = Calculator()
+result1 = calc.add_numbers(1, 2, 3)
+result2 = calc.add_numbers(10, 20, 30, 40, 50)
+print(result1)  # 6
+print(result2)  # 150
+```
+
+The `*args` collects all arguments into a tuple:
+
+```json
+calc.show_numbers(5, 10, 15, 20)
+```
+
+Output:
+
+```json
+6
+150
+Number 1: 5
+Number 2: 10
+Number 3: 15
+Number 4: 20
+```
+
+Note that the `*args` parameter can have any naming convention of your choice, but always remember of the asterisk at the beginning...
+
+#### Combining Regular Parameters:
+
+You can combine regular parameters with the `*args`:
+
+```json
+class Logger:
+    def log_message(self, level, *messages):
+        print(f"[{level}]", end=" ")
+        for message in messages:
+            print(message, end=" ")
+        print()  # New line
+
+logger = Logger()
+logger.log_message("INFO", "User", "logged", "in")
+logger.log_message("ERROR", "Connection", "failed")
+```
+
+Output:
+
+```json
+[INFO] User logged in
+[ERROR] Connection failed
+```
+
+#### Applying the `*args` in Constructor Methods:
+
+```json
+class Team:
+    def __init__(self, team_name, *players):
+        self.team_name = team_name
+        self.players = list(players)
+
+    def show_team(self):
+        print(f"Team: {self.team_name}")
+        for player in self.players:
+            print(f"- {player}")
+
+team = Team("Warriors", "Alice", "Bob", "Charlie", "Diana")
+team.show_team()
+```
+
+Output:
+
+```json
+Team: Warriors
+- Alice
+- Bob
+- Charlie
+- Diana
+```
+
+#### Unpacking Arguments:
+
+You can also unpack arguments when calling methods:
+
+```json
+numbers = [1, 2, 3, 4, 5]
+result = calc.add_numbers(*numbers)  # Unpacks the list (the numbers have been removed from the list!)
+print(result)  # 15
+```
+
+**KEY POINT:** The `*args` **collects any number or elements of positional arguments into a tuple**, use this when you don't know how many arguments will be passed to a method. Remember the the name `args` is **conventional and you could use any name after the asterisk**, but `args` is the standard.
+
+Check the example in practice.py in lines 1592 - 1620.
+
+### The `**kwargs`:
+
+`**kwargs` is short for "keyword arguments", it allows a function to accept any element of named arguments (like `key=value` pair) without having to define them in advance.
+
+#### How it Works:
+
+- **`*args`** -> Collects extra positional arguments into a tuple '()'; -**`**kwargs**`** -> Collects extra keyword arguments into a dictionary '{key : value}'.
+
+#### Simple Example:
+
+```json
+def greet(**kwargs):
+    print(kwargs)
+
+greet(name="Alice", age=25, country="Australia")
+```
+
+Output:
+
+```json
+{ "name": "Alice", "age": 25, "country": "Australia" }
+```
+
+As you can see, the `**kwargs` automatically takes all of the keyword arguments and passes them into a dictionary to be then stored into the `kwargs` variable!
+
+##### Using the Dictionary:
+
+Since the `**kwargs` generates a clean dictionary, you can most certainly loop through it, depending on what iterables you would like to obtain from:
+
+```json
+def print_info(**kwargs):
+    print("Information received:")
+    for key, value in kwargs.items():
+        print(f"{key}: {value}")
+
+print_info(name="Bob", age=30, job="Teacher")
+```
+
+Output:
+
+```json
+Information received:
+name: Bob
+age: 30
+job: Teacher
+```
+
+##### Mixing regular arguments with `**kwargs`:
+
+You can also combine regular parameters with the `**kwargs` just like the `*args` parameter!
+
+```json
+def create_profile(name, **details): # The kwargs parameter can also have different naming conventions!
+    print(f"Creating profile for: {name}")
+    print("Additional details:")
+    for key, value in details.items():
+        print(f"  {key}: {value}")
+
+create_profile("Sarah", age=28, city="London", hobby="Reading")
+```
+
+Output:
+
+```json
+Creating profile for: Sarah
+Additional details:
+  age: 28
+  city: London
+  hobby: Reading
+```
+
+##### Empty `**kwargs`:
+
+If no **keyword arguments are passed**, the `kwargs` parameter will be instantiated as an **empty dictionary**. For example:
+
+```json
+def show_data(**kwargs):
+    if kwargs:
+        print("Data:", kwargs)
+    else:
+        print("No data provided")
+
+show_data()  # No arguments
+show_data(item="apple")  # With arguments
+```
+
+Output:
+
+```json
+No data provided
+Data: {'item': 'apple'}
+```
+
+#### Real-World example with `**kwargs`:
+
+Here, you will see why you would use the `**kwargs` parameter in a class:
+
+```json
+class Person:
+    def __init__(self, name, **kwargs):
+        self.name = name
+        self.details = kwargs
+
+    def show_info(self):
+        print(f"Name: {self.name}")
+        for key, value in self.details.items():
+            print(f"{key}: {value}")
+
+person = Person("Alice", age=25, city="New York", job="Engineer")
+person.show_info()
+```
+
+Output:
+
+```json
+Name: Alice
+age: 25
+city: New York
+job: Engineer
+```
+
+#### Unpacking Dictionaries:
+
+You can also unpack dictionaries when calling functions!
+
+```json
+def display_settings(**kwargs):
+    for setting, value in kwargs.items():
+        print(f"{setting} = {value}")
+
+settings = {"debug": True, "verbose": False, "timeout": 30}
+display_settings(**settings)  # Unpacks the dictionary (removes all key-value pairs inside the dictionary)
+```
+
+Output:
+
+```json
+debug = True
+verbose = False
+timeout = 30
+```
+
+#### **KEY POINTS**:
+
+- The `**kwargs` collects keyword arguments into a dictionary;
+- The name `kwargs` is **conventional**, and can be swapped with any other name;
+- Use this for flexible function signatures;
+- Great for handling optional parameters or configuration settings.
+
+Example in practice.py lines 1622 - 1634.

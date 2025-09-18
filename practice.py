@@ -1589,3 +1589,46 @@ class Timer:
 # with Timer():
 #     time.sleep(10) # Elapsed Time: approximately 10 seconds
 
+# Use the '*args' parameter!
+class Sum:
+    @classmethod
+    def sum_all_numbers(cls, *args):
+        # TODO: Check if no arguments were provided
+        # TODO: If no arguments, return 0
+        if not args:
+            return 0
+
+        is_a_num = True
+
+        # TODO: Validate that all arguments are numbers (int or float)
+        # TODO: Loop through each argument in args
+        for arg in args:
+        # TODO: Check if each argument is an instance of int or float using isinstance(arg, (int, float))
+        # TODO: If any argument is not a number, print "Error: All arguments must be numbers" and return None
+            if not isinstance(arg, (int, float)):
+                print("Error: All arguments must be numbers")
+                is_a_num = False
+                break
+        # TODO: If all arguments are valid numbers, return their sum using the sum() function
+        if is_a_num:
+            return sum(args)
+
+        return None
+
+# the_sum = Sum()
+# print(the_sum.sum_all_numbers(1, 2, 3, 4, 5)) # 15
+# print(Sum.sum_all_numbers(20, 10, 30, 21)) # 81
+
+# Use the '**kwargs' parameter!
+class Person:
+    def __init__(self, **details):
+        # TODO: Create a dictionary from the kwargs
+        # TODO: Print "Person created with properties:"
+        print("Person created with properties:")
+        self.person_details: dict = details
+        # TODO: Loop through each key-value pair in the dictionary
+        for key, value in details.items():
+        # TODO: Print each key-value pair on a new line in the format "key: value"
+            print(f"{key}: {value}")
+
+person1 = Person(name="Craig", age=21, hobby="Video games", skill="Sprinter") # Should print a dict in a format "key: value"
