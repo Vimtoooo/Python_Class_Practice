@@ -2223,3 +2223,100 @@ timeout = 30
 - Great for handling optional parameters or configuration settings.
 
 Example in practice.py lines 1622 - 1634.
+
+## Design Patterns Part 1:
+
+### Introduction to Design Patterns:
+
+Design Patterns are reusable solutions to common problems in software design, they are like blueprints that you can customize to solve recurring design problems in your code. Think of design patterns as proven templates that experienced developers use to solve similar problems. When you say, "I used the Singleton pattern," other developers immediately understand the structure of your code. Here is a simple example of why patterns matter:
+
+#### Without Design Patterns:
+
+```json
+# Without pattern - messy approach
+class DatabaseConnection:
+    def __init__(self):
+        self.connection = "Connected to database"
+
+# Problem: Multiple connections created
+db1 = DatabaseConnection()
+db2 = DatabaseConnection()  # Wasteful - creates another connection
+```
+
+### With Design Patterns:
+
+With a design pattern, you get a better solution!
+
+```json
+# With Singleton pattern - controlled approach
+class DatabaseConnection:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.connection = "Connected to database"
+        return cls._instance
+
+# Now only one connection exists
+db1 = DatabaseConnection()
+db2 = DatabaseConnection()
+print(db1 is db2)  # True - same instance
+```
+
+#### Explanation of the code above:
+
+- `DatabaseConnection._instance` is a class variable (a protected class attribute) that stores the single instance;
+- The `__new__` dunder method checks if `_instance` is set to `None` (signifies that no instances have been initialized or created yet);
+- If so, it creates a new instance and sets up the connection;
+- If an instance already exists, it returns the existing one;
+- Note that both `db1 is db2` is `True` because they refer to the same object (in terms of memory address!), preventing multiple distinct connections to the database (resource waste). This guarantees a single, shared point of access;
+
+### The Singleton Design Pattern:
+
+The code above relates to the "Singleton design pattern", and note that this pattern:
+
+- Ensures that **only one instance** of a class exists throughout the program;
+- This is very useful for managing shared resources (e.g. database connections, configuration managers...).
+
+### Why use Design Patterns?
+
+- **Reusability:** For solutions that can be reapplied to similar problems;
+- **Communication:** Common vocabulary among developers;
+- **Best Practices:** Time-tested solutions;
+- **Maintainability:** Well-structured and organized code.
+
+### What will be mentioned in Design Patterns:
+
+#### **Creational Patterns:**
+
+How these objects will be constructed:
+
+- Singleton Pattern - One instance only;
+- Factory Pattern - Create objects without specifying the exact class.
+
+#### **Structural Patterns:**
+
+How objects are composed:
+
+- Adapter Pattern - Make incompatible interfaces work together;
+- Decorator Pattern - Add functionality without changing the structure.
+
+#### Behavior Pattern:
+
+How objects interact:
+
+- Observer pattern - Notify multiple objects of changes;
+- Strategy Pattern - Switch algorithms dynamically;
+- Command Pattern - Encapsulate requests as objects.
+
+### Roles of the distinct patters:
+
+Each pattern have their pros and cons, so it is key to note that each pattern will:
+
+- Be able to solve specific problems;
+- Have different ways to implement them into Python;
+- Specific times to use it;
+- Contain real-world examples.
+
+**KEY POINT:** Design patterns are proven solutions to programming problems, they provide a shared vocabulary and best practices that make your code more maintainable, flexible and easier to understand. We will go through 7 essential patterns that every Python developer should know.
