@@ -2391,8 +2391,8 @@ class Config:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.settings = {}
-        return cls._instance
+            cls._instance.settings = {} # Instance attribute
+        return cls._instance # Return the protected instance
 
     def set_setting(self, key, value):
         self.settings[key] = value
@@ -2426,3 +2426,106 @@ True
 **KEY POINT:** The Singleton Pattern utilizes the `__new__()` dunder method to **control object creation, ensuring only one instance exists in the codebase**. Use it for resources that should only have one copy throughout your application, like database connections, loggers or configuration managers. Remember that all variables pointing to a Singleton **references the exact same and original object in a memory address!**
 
 More examples in practice.py lines 1637 - 1740.
+
+### Factory Pattern:
+
+The factory pattern **creates objects without specifying their exact class**. Instead of calling constructors directly, you would use the factory method which will **decide the origin of the object's instantiation**. (decides which class to instantiate from).
+Pay close attention to the code below!
+
+#### Example of a Factory Pattern:
+
+```json
+class Car: # Both of these classes are vehicles but are distinct from each other (depending on the vehicle type)
+    def __init__(self, brand): # __init__ and info methods for both classes
+        self.brand = brand
+        self.type = "Car"
+
+    def info(self):
+        return f"{self.type}: {self.brand}"
+
+class Bike:
+    def __init__(self, brand):
+        self.brand = brand
+        self.type = "Bike"
+
+    def info(self):
+        return f"{self.type}: {self.brand}"
+```
+
+We create a factory class to produce these objects more precisely:
+
+```json
+class VehicleFactory:
+    def create_vehicle(self, vehicle_type, brand):
+        if vehicle_type == "car":
+            return Car(brand) # Composes a Car object
+        elif vehicle_type == "bike":
+            return Bike(brand) # Composes a Bike object
+        else:
+            raise ValueError(f"Unknown type: {vehicle_type}")
+```
+
+Then utilize the factory class instead of calling constructors directly:
+
+```json
+factory = VehicleFactory()
+my_car = factory.create_vehicle("car", "Toyota")
+my_bike = factory.create_vehicle("bike", "Honda")
+
+print(my_car.info())   # Car: Toyota
+print(my_bike.info())  # Bike: Honda
+```
+
+#### Using the `*args` parameter:
+
+You can use the `*args` parameter to make your factory class more flexible:
+
+```json
+class FlexibleFactory:
+    def create_vehicle(self, vehicle_type, *args):
+        if vehicle_type == "car":
+            return Car(args[0])  # Just brand
+        elif vehicle_type == "truck":
+            return Truck(args[0], args[1])  # Brand and capacity
+        else:
+            raise ValueError(f"Unknown type: {vehicle_type}")
+
+class Truck:
+    def __init__(self, brand, capacity):
+        self.brand = brand
+        self.capacity = capacity
+        self.type = "Truck"
+
+    def info(self):
+        return f"{self.type}: {self.brand} ({self.capacity}t)"
+```
+
+Finally, use the flexible factory:
+
+```json
+flexible = FlexibleFactory()
+car = flexible.create_vehicle("car", "Ford")
+truck = flexible.create_vehicle("truck", "Volvo", "20")
+
+print(car.info())    # Car: Ford
+print(truck.info())  # Truck: Volvo (20t)
+```
+
+Output:
+
+```json
+Car: Toyota
+Bike: Honda
+Car: Ford
+Truck: Volvo (20t)
+```
+
+#### Key Characteristics:
+
+- The factory pattern operates with **composition** when constructing and instantiating instances with a **factory class**;
+- The factory itself is **not a parent class** of the objects it creates;
+- Instead, it contains logic to decide which class to instantiate and returns an instance of that specified class;
+- The created object is **composed** (assembled) by the factory, not inherited from it;
+- This creates flexibility and decouples object creation from the client code.
+
+**KEY POINT:** The factory pattern lets you create objects without knowing their exact class, where the factory class decides where to instantiate based on parameters. Use `*args` to handle multiple products with different constructor parameters, making your code more flexible and easier to extend with new product types!

@@ -18,6 +18,7 @@
         "attrubute",
         "classmethod",
         "dunder",
+        "elif",
         "floordiv",
         "getitem",
         "kwargs",

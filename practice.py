@@ -1655,6 +1655,10 @@ class DatabaseConnection:
         self.connected = False
         print("Disconnected from database")
 
+# db = DatabaseConnection()
+# db2 = DatabaseConnection()
+# print(db, db2)
+
 # Comprehensive test case handler
 # test_case = input()
 
@@ -1736,4 +1740,192 @@ class DatabaseConnection:
 #     db.connect()  # Will still print "Connected to database at localhost"
 #     # The connect method has a hardcoded message that doesn't use the host attribute
 #     print("Message still shows localhost: True")
+
+from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    # TODO: Define the Shape base class with abstract methods
+    
+    @abstractmethod
+    def area(self):
+        # TODO: Define an abstract area method that will be implemented by subclasses
+        # This method should calculate and return the area of the shape
+        pass
+    
+    @abstractmethod
+    def perimeter(self):
+        # TODO: Define an abstract perimeter method that will be implemented by subclasses
+        # This method should calculate and return the perimeter of the shape
+        pass
+
+class Circle(Shape):
+    # TODO: Implement the Circle class that inherits from Shape
+    
+    def __init__(self, radius):
+        # TODO: Initialize the Circle with a radius parameter
+        # TODO: Store the radius as an instance attribute
+        self.radius = radius
+    
+    def area(self):
+        # TODO: Override the area method to calculate the circle's area
+        # TODO: Use the formula: π * radius^2
+        # TODO: Use 3.14159 for π
+        return 3.14159 * (self.radius ** 2)
+    
+    def perimeter(self):
+        # TODO: Override the perimeter method to calculate the circle's perimeter
+        # TODO: Use the formula: 2 * π * radius
+        # TODO: Use 3.14159 for π
+        return 3.14159 * (self.radius * 2)
+
+class Rectangle(Shape):
+    # TODO: Implement the Rectangle class that inherits from Shape
+    
+    def __init__(self, length, width):
+        # TODO: Initialize the Rectangle with length and width parameters
+        # TODO: Store length and width as instance attributes
+        self.length = length
+        self.width = width
+    
+    def area(self):
+        # TODO: Override the area method to calculate the rectangle's area
+        # TODO: Use the formula: length * width
+        return self.length * self.width
+    
+    def perimeter(self):
+        # TODO: Override the perimeter method to calculate the rectangle's perimeter
+        # TODO: Use the formula: 2 * (length + width)
+        return 2 * (self.length + self.width)
+
+import math as m
+
+class Triangle(Shape):
+    # TODO: Implement the Triangle class that inherits from Shape
+    
+    def __init__(self, a, b, c):
+        # TODO: Initialize the Triangle with three sides a, b, and c
+        # TODO: Store a, b, and c as instance attributes
+        self.a = a
+        self.b = b
+        self.c = c
+    
+    def area(self):
+        # TODO: Override the area method to calculate the triangle's area
+        # TODO: Use Heron's formula: sqrt(s * (s-a) * (s-b) * (s-c))
+        # TODO: where s = (a + b + c) / 2 (semi-perimeter)
+        s = (self.a + self.b + self.c) / 2
+        return m.sqrt(s * (s - self.a) * (s - self.b) * (s - self.c))
+    
+    def perimeter(self):
+        # TODO: Override the perimeter method to calculate the triangle's perimeter
+        # TODO: Use the formula: a + b + c (sum of all sides)
+        return self.a + self.b + self.c
+
+class ShapeFactory:
+    # TODO: Implement the ShapeFactory class
+    
+    def create_shape(self, shape_type: str, *args: int | float) -> object:
+        # TODO: Implement the create_shape method that creates and returns different shapes
+        # TODO: The method should take shape_type as the first parameter and dimensions as additional arguments
+        # TODO: Handle the following shape types (case-insensitive):
+        #       - "circle": Create a Circle with radius (args[0])
+        #       - "rectangle": Create a Rectangle with length (args[0]) and width (args[1])
+        #       - "triangle": Create a Triangle with sides a (args[0]), b (args[1]), and c (args[2])
+        # TODO: For invalid shape types, raise a ValueError with the message: "Invalid shape type: {shape_type}"
+        shape_type = shape_type.lower()
+        if shape_type == "circle":
+            return Circle(args[0])
+        elif shape_type == "rectangle":
+            return Rectangle(args[0], args[1])
+        elif shape_type == "triangle":
+            return Triangle(args[0], args[1], args[2])
+        else:
+            raise ValueError(f"Invalid shape type: {shape_type}")
+    
+
+# Test case executor
+# test_case = input()
+
+# factory = ShapeFactory()
+
+# if test_case == "circle_area":
+#     circle = factory.create_shape("circle", 5)
+#     print(f"{circle.area():.2f}")
+
+# elif test_case == "rectangle_perimeter":
+#     rectangle = factory.create_shape("rectangle", 4, 6)
+#     print(f"{rectangle.perimeter()}")
+
+# elif test_case == "triangle_perimeter":
+#     triangle = factory.create_shape("triangle", 3, 4, 5)
+#     print(f"{triangle.perimeter()}")
+
+# elif test_case == "invalid_shape":
+#     try:
+#         factory.create_shape("hexagon", 6)
+#         print("No exception raised")
+#     except ValueError as e:
+#         print(str(e))
+
+# elif test_case == "case_insensitive":
+#     circle = factory.create_shape("CiRcLe", 3)
+#     print(f"{circle.area():.2f}")
+
+# elif test_case == "shape_inheritance":
+#     shapes = [
+#         factory.create_shape("circle", 2),
+#         factory.create_shape("rectangle", 2, 3),
+#         factory.create_shape("triangle", 3, 4, 5)
+#     ]
+#     all_shapes = all(isinstance(shape, Shape) for shape in shapes)
+#     print(all_shapes)
+
+# elif test_case == "zero_radius_circle":
+#     circle = factory.create_shape("circle", 0)
+#     print(f"{circle.area():.2f} {circle.perimeter():.2f}")
+
+# elif test_case == "negative_dimensions":
+#     rectangle = factory.create_shape("rectangle", -2, -3)
+#     print(f"{rectangle.area()}")
+
+# elif test_case == "large_values":
+#     circle = factory.create_shape("circle", 1000000)
+#     print(f"{circle.area():.2e}")
+
+# elif test_case == "polymorphism_test":
+#     shapes = [
+#         factory.create_shape("circle", 2),
+#         factory.create_shape("rectangle", 3, 4),
+#         factory.create_shape("triangle", 3, 4, 5)
+#     ]
+#     area_sum = sum(shape.area() for shape in shapes)
+#     perimeter_sum = sum(shape.perimeter() for shape in shapes)
+#     print(f"Area sum: {area_sum:.2f}, Perimeter sum: {perimeter_sum:.2f}")
+
+# elif test_case == "triangle_area":
+#     triangle = factory.create_shape("triangle", 3, 4, 5)
+#     print(f"{triangle.area():.2f}")
+
+# elif test_case == "method_override":
+#     circle = factory.create_shape("circle", 2)
+#     rectangle = factory.create_shape("rectangle", 3, 4)
+#     triangle = factory.create_shape("triangle", 3, 4, 5)
+    
+#     # Get method objects to compare implementations
+#     circle_area = Circle.area
+#     rectangle_area = Rectangle.area
+#     triangle_area = Triangle.area
+    
+#     circle_perimeter = Circle.perimeter
+#     rectangle_perimeter = Rectangle.perimeter
+#     triangle_perimeter = Triangle.perimeter
+    
+#     # Check if all implementations are unique
+#     unique_areas = len({circle_area, rectangle_area, triangle_area}) == 3
+#     unique_perimeters = len({circle_perimeter, rectangle_perimeter, triangle_perimeter}) == 3
+    
+#     if unique_areas and unique_perimeters:
+#         print("All shapes correctly override methods")
+#     else:
+#         print("Some shapes share method implementations")
 
