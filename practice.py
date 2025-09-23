@@ -1929,3 +1929,67 @@ class ShapeFactory:
 #     else:
 #         print("Some shapes share method implementations")
 
+
+# IDEA: Implement the observer pattern!
+class Subject:
+    def __init__(self):
+        self._observers = []
+    
+    def attach(self, observer):
+        self._observers.append(observer)
+        
+    def detach(self, observer):
+        self._observers.remove(observer)
+        
+    def notify(self, data):
+        for observer in self._observers:
+            observer.update(data)
+            
+class Observer:
+    def update(self, data):
+        pass
+
+# Write your WeatherStation class here
+class WeatherStation(Subject):
+    def __init__(self):
+        super().__init__()
+        self._temperature = 0
+
+    def set_temperature(self, temperature):
+        self._temperature = temperature
+        self.notify(self._temperature)
+    
+    def get_temperature(self):
+        return self._temperature
+
+# Write your WeatherDisplay class here
+class WeatherDisplay(Observer):
+    def __init__(self, name):
+        self.name = name
+    
+    def update(self, temperature):
+        print(f"Display {self.name}: Current temperature is {temperature}C")
+
+# Example of usage:
+
+# 1. Create instances for the weather station and displays:
+# station = WeatherStation()
+
+# computer_display = WeatherDisplay("Computer")
+# tv_display = WeatherDisplay("TV")
+
+# # 2. Attach both displays into the station:
+# station.attach(computer_display)
+# station.attach(tv_display)
+
+# # 3. Update the temperature to notify both displays!
+# station.set_temperature(21)
+
+# # 4. Get the current temperature:
+# print(station.get_temperature())
+
+# # 5. Remove one observer from the _observers list:
+# station.detach(tv_display)
+
+# # 6. Call the station notify() method:
+# station.notify(10)

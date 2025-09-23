@@ -2529,3 +2529,123 @@ Truck: Volvo (20t)
 - This creates flexibility and decouples object creation from the client code.
 
 **KEY POINT:** The factory pattern lets you create objects without knowing their exact class, where the factory class decides where to instantiate based on parameters. Use `*args` to handle multiple products with different constructor parameters, making your code more flexible and easier to extend with new product types!
+
+### Observer Pattern:
+
+The observer pattern creates a **one-to-may relationship** where one **object (subject) notifies multiple objects (observers) when its state changes**. Here is a simple subject class that manages observers:
+
+#### Simple Example:
+
+```json
+class Subject: # Represents the subject class
+    def __init__(self):
+        self._observers = [] # Protected attribute
+
+    def add_observer(self, observer):
+        self._observers.append(observer)
+
+    def notify(self, message):
+        for observer in self._observers:
+            observer.update(message)
+```
+
+The subject keeps the list of observers and can notify all of them at once. Create simple observer classes:
+
+```json
+class EmailNotifier:
+    def update(self, message):
+        print(f"Email sent: {message}")
+
+class SMSNotifier:
+    def update(self, message):
+        print(f"SMS sent: {message}")
+```
+
+Note that each observer has an `update()` method that gets called when notified!
+Now we use the observer pattern:
+
+```json
+# Create subject
+news = Subject()
+
+# Create observers
+email = EmailNotifier()
+sms = SMSNotifier()
+
+# Add observers to subject (inserted into the '_observer' protected attribute)
+news.add_observer(email)
+news.add_observer(sms)
+
+# Notify all observers
+news.notify("Breaking news: Python is awesome!")
+```
+
+#### Practical Example:
+
+We create a practical example with a stock price tracker:
+
+```json
+class Stock: # Represents the subject class
+    def __init__(self, symbol, price):
+        self.symbol = symbol
+        self._price = price
+        self._observers = [] # Here, we will store our observers (other instances)
+
+    def add_observer(self, observer):
+        self._observers.append(observer) # Method for adding observers
+
+    def set_price(self, price):
+        self._price = price
+        self.notify()
+
+    def notify(self):
+        for observer in self._observers:
+            observer.update(self.symbol, self._price) # Iterate through all observers to return the notification!
+
+class Investor:
+    def __init__(self, name):
+        self.name = name
+
+    def update(self, symbol, price): # This method will be called when the price has been altered
+        print(f"{self.name} notified: {symbol} is now ${price}")
+
+# Use the stock tracker
+apple_stock = Stock("AAPL", 150)
+
+investor1 = Investor("Alice")
+investor2 = Investor("Bob")
+
+apple_stock.add_observer(investor1)
+apple_stock.add_observer(investor2)
+
+apple_stock.set_price(155)  # Notifies all investors
+```
+
+Output:
+
+```json
+Email sent: Breaking news: Python is awesome!
+SMS sent: Breaking news: Python is awesome!
+Alice notified: AAPL is now $155
+Bob notified: AAPL is now $155
+```
+
+##### Why use the Observer Pattern?
+
+- **Decouples** the subject from its observers, making code more modular and flexible;
+- Allows multiple objects to react to changes in another object \*\*without tight coupling;
+- Useful for implementing **event-driven systems**.
+
+##### Other Real-World Uses:
+
+- **GUI Frameworks:** Buttons notify listeners when clicked;
+- **Messaging System:** Subscribers get updates when new messages arrive;
+- **Logging:** Multiple loggers receive events from an application.
+
+#### Summary:
+
+The observer pattern lets you build systems where objects automatically react to changes in other objects, making your code more modular, flexible and event-driven.
+
+**KEY POINT:** The subject maintains a list of observers and calls their `update()` method when needed. This is useful for notifications, event systems, and keeping multiple parts of your application synchronized.
+
+More examples of usage in practice.py between lines 1933 - 1995.
