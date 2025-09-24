@@ -2649,3 +2649,144 @@ The observer pattern lets you build systems where objects automatically react to
 **KEY POINT:** The subject maintains a list of observers and calls their `update()` method when needed. This is useful for notifications, event systems, and keeping multiple parts of your application synchronized.
 
 More examples of usage in practice.py between lines 1933 - 1995.
+
+### Strategy Pattern:
+
+The strategy pattern defines a family of algorithms, encapsulates each one, and makes them interchangeable. You can change algorithms at runtime without changing the client code.
+
+#### Simple Example:
+
+Here are simple strategy classes for different payment methods:
+
+```json
+class CreditCard: # Strategy classes with their own distinct algorithms
+    def pay(self, amount):
+        return f"Paid ${amount} with Credit Card"
+
+class PayPal:
+    def pay(self, amount):
+        return f"Paid ${amount} with PayPal"
+
+class Bitcoin:
+    def pay(self, amount):
+        return f"Paid ${amount} with Bitcoin"
+```
+
+Note that each strategy class implements their own `pay()` method, but with different behaviors. Let's create a context class that uses strategies:
+
+```json
+class ShoppingCart: # Context class for utilizing strategy classes/instances
+    def __init__(self):
+        self.total = 0
+        self.payment_strategy = None
+
+    def add_item(self, price):
+        self.total += price
+
+    def set_payment_strategy(self, strategy):
+        self.payment_strategy = strategy
+
+    def checkout(self):
+        return self.payment_strategy.pay(self.total)
+```
+
+The Context class can switch from different payment strategies, now we use the strategy pattern:
+
+```json
+# Create the context instance for strategy manipulation
+cart = ShoppingCart()
+cart.add_item(50)
+cart.add_item(30)
+
+# Use credit card strategy
+cart.set_payment_strategy(CreditCard())
+print(cart.checkout())
+
+# Switch to PayPal strategy
+cart.set_payment_strategy(PayPal())
+print(cart.checkout())
+```
+
+Output:
+
+```json
+Paid $80 with Credit Card
+Paid $80 with PayPal
+```
+
+#### Sorting Strategies:
+
+Here, we create a sorting strategy:
+
+```json
+# Two strategy classes
+class BubbleSort:
+    def sort(self, data):
+        return f"Bubble sorted: {sorted(data)}"
+
+class QuickSort:
+    def sort(self, data):
+        return f"Quick sorted: {sorted(data)}"
+
+# One context class
+class Sorter:
+    def __init__(self, strategy):
+        self.strategy = strategy
+
+    def set_strategy(self, strategy):
+        self.strategy = strategy # Defines which strategy class to use
+
+    def sort_data(self, data):
+        return self.strategy.sort(data) # Calls the sort() method within one chosen strategy
+
+# Use different sorting strategies
+numbers = [3, 1, 4, 1, 5]
+
+sorter = Sorter(BubbleSort())
+print(sorter.sort_data(numbers))
+
+sorter.set_strategy(QuickSort())
+print(sorter.sort_data(numbers))
+```
+
+Output:
+
+```json
+Bubble sorted: [1, 1, 3, 4, 5]
+Quick sorted: [1, 1, 3, 4, 5]
+```
+
+##### Why Use the Strategy Pattern?
+
+- **Flexibility:** You can easily swap algorithms or behaviors without modifying the context class;
+- **Separation of Concerns:** Keeps algorithms independent from the context, making code cleaner and easier to maintain;
+- **Open/Closed Principle:** Add new strategies without changing existing code;
+- **Testing:** Each strategy can be tested independently.
+
+#### Other Real-World Uses:
+
+- Payment methods/processes;
+- Sorting algorithms;
+- Authentication methods (switching between password, OAuth, or biometric authentication strategies).
+
+#### Summary:
+
+The main importance of Strategy Patterns also include:
+
+- Decoupling algorithms from the context;
+- Promotion of code re usage and extensibility;
+- Makes it easier to add, remove or change behaviors;
+- Improves maintainability and testability.
+
+##### Summary Table:
+
+|   **Aspect**   | **Strategy Pattern**                            |
+| :------------: | ----------------------------------------------- |
+|    Purpose     | Swap algorithms/behaviors at runtime.           |
+|   Structure    | Context + interchangeable strategy classes.     |
+|    Benefits    | Flexibility, maintainability and extensibility. |
+| Real-world use | Payments, sorting, authentications, etc...      |
+
+**KEY POINT:** The strategy pattern lets you swap algorithms at runtime, define different strategies with the same interface, then let the context class choose which one to use. This makes your code more flexible and easier to extend with new algorithms without having to change the codebase.
+
+More examples in practice.py lines 1998 - 2062.
