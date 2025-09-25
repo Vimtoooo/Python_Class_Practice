@@ -8,6 +8,7 @@
         "deleter",
         "deleters",
         "metaprogramming",
+        "Undoable",
         "Wachowski"
     ],
     "ignoreWords": [

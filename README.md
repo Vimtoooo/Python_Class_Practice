@@ -2790,3 +2790,199 @@ The main importance of Strategy Patterns also include:
 **KEY POINT:** The strategy pattern lets you swap algorithms at runtime, define different strategies with the same interface, then let the context class choose which one to use. This makes your code more flexible and easier to extend with new algorithms without having to change the codebase.
 
 More examples in practice.py lines 1998 - 2062.
+
+## Design Patterns Part 2:
+
+### Command Pattern:
+
+The command pattern encapsulates a request as an object, allowing you to queue operations, log requests, and support undo functionality. It separates the objects that calls the operation from the one that performs it.
+
+#### Simple Example:
+
+Here are simple command classes:
+
+```json
+# Command Classes
+class Command:
+    def execute(self):
+        pass
+
+# Both of these two commands take the receiver object as an argument during initialization
+class LightOnCommand(Command):
+    def __init__(self, light):
+        self.light = light
+
+    def execute(self):
+        self.light.turn_on()
+
+class LightOffCommand(Command):
+    def __init__(self, light):
+        self.light = light
+
+    def execute(self):
+        self.light.turn_off()
+```
+
+Each command (class) encapsulates a specific operation on a receiver object:
+Let's create the receiver that actually performs the work:
+
+```json
+# Receiver Class
+class Light:
+    def turn_on(self):
+        print("Light is on")
+
+    def turn_off(self):
+        print("Light is off")
+```
+
+Then create an evoker that executes commands:
+
+```json
+# Evoker Class
+class RemoteControl:
+    def __init__(self):
+        self.command = None
+
+    def set_command(self, command):
+        self.command = command
+
+    def press_button(self):
+        self.command.execute()
+```
+
+Finally, use the command pattern:
+
+```json
+# 1. Create receiver
+light = Light()
+
+# 2. Create commands
+light_on = LightOnCommand(light)
+light_off = LightOffCommand(light)
+
+# 3. Create invoker
+remote = RemoteControl()
+
+# 4. Execute different commands
+remote.set_command(light_on)
+remote.press_button()
+
+remote.set_command(light_off)
+remote.press_button()
+```
+
+#### Undo Operations:
+
+You can add support for for undo operations:
+
+```json
+class UndoableCommand(Command):
+    def undo(self):
+        pass
+
+class LightOnCommand(UndoableCommand):
+    def __init__(self, light):
+        self.light = light
+
+    def execute(self):
+        self.light.turn_on()
+
+    def undo(self):
+        self.light.turn_off()
+
+class SmartRemote:
+    def __init__(self):
+        self.last_command = None
+
+    def execute_command(self, command):
+        command.execute()
+        self.last_command = command
+
+    def undo(self):
+        if self.last_command:
+            self.last_command.undo()
+
+smart_remote = SmartRemote()
+smart_remote.execute_command(LightOnCommand(light))
+smart_remote.undo()  # Turns light off
+```
+
+Output:
+
+```json
+Light is on
+Light is off
+Light is on
+Light is off
+```
+
+#### How does it Work?
+
+This pattern involves three main roles:
+
+##### **Command Classes:**
+
+- Encapsulate all information needed to perform an action;
+- Each command implements an `execute()` method (and optionally an `undo()` method);
+- Examples: `LightOnCommand`, `LightOffCommand`.
+
+###### Should it inherit from ABC and become an abstract class?
+
+Note that the `Command` class in the command pattern is typically used as a **base class** to define a common interface for all command objects. Here is the breakdown:
+
+**If not Abstract: If it does not implement `ABC` and `@abstractmethod` decorators, it simply acts as a **convenience base class**, providing a shared parent for all command classes, which can help with type checking and organization. However, it does **not enforce\*\* that subclasses must implement such methods like the `execute()` method!
+
+**If abstract:** By using `ABC` and `@abstractmethod`, Python will enforce that all subclasses implement the `execute()` method or the `undo()` method (raises an error when you have forgotten to implement the concrete methods). This approach is safer and more robust, ensuring that all commands follow the required interface.
+
+But, it is **best practice** to make the `Command` class as an abstract base class for clarity and safety:
+
+```json
+from abc import ABC, abstractmethod
+
+class Command(ABC):
+    @abstractmethod
+    def execute(self):
+        pass
+```
+
+##### **Receiver Class:**
+
+- Knows how to perform the actual work;
+- COntains the business logic or the real operations;
+- Examples: `Light` class with `turn_on()` and `turn_off()` methods.
+
+##### **Invoker Class:**
+
+- Holds the triggers commands;
+- Does not know the details of how the command is executed.
+- Examples: `RemoteControl` class with `set_command()` and `press_button()`.
+
+#### Importance:
+
+- It **decouples sender and receiver**, where the invoker doesn't need to know how the receiver works;
+- **Supports undo/redo:** Commands can implement `undo()` for reversible actions;
+- **Flexible and extensible:** Easily add new commands without changing existing code (similar to the strategy pattern);
+- **Queuing and logging:** Commands cna be stored and executed later.
+
+#### Real-World Examples:
+
+- GUI Buttons and Menus;
+- Remote Controls;
+- Task Scheduling and Queuing;
+- Macro Recording;
+- Transaction System;
+- Game Development;
+- Home Automation.
+
+#### Summary:
+
+| **Role** | **Responsibility**                           |
+| :------: | -------------------------------------------- |
+| Command  | Encapsulates an action (`execute`, `undo`).  |
+| Receiver | Performs the actual work.                    |
+| Invoker  | Triggers commands, holds references to them. |
+
+**KEY POINT:** The command pattern turns requests into objects that can be stored, passed around, and executed later. The invoker doesn't need to know how to perform the operations, it just calls `execute()` on the command object. This enables features like undo/redo, queuing operations and logging commands.
+
+Advanced example im practice.py lines 2064 - 2206.

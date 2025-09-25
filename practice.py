@@ -2061,3 +2061,147 @@ def main():
 # if __name__ == "__main__":
 #     main()
 
+# Implement the Command Pattern!
+from abc import ABC, abstractmethod
+
+# Abstract Base Class for Commands
+class Command(ABC):
+    """
+    Abstract base class defining the interface for all commands.
+    Each command must implement execute() to perform an action and undo() to reverse it.
+    The constructor takes a reference to the receiver (e.g., TextEditor) to allow interaction.
+    """
+    def __init__(self, receiver):
+        self.receiver = receiver
+
+    @abstractmethod
+    def execute(self):
+        """
+        Performs the command's action on the receiver.
+        Abstract method; must be implemented by concrete subclasses.
+        """
+        pass
+
+    @abstractmethod
+    def undo(self):
+        """
+        Reverses the command's action on the receiver.
+        Abstract method; must be implemented by concrete subclasses.
+        """
+        pass
+
+# Receiver: TextEditor
+class TextEditor:
+    """
+    The receiver class that maintains the text state.
+    Uses a list of characters for precise insertion and deletion at arbitrary positions.
+    This design choice allows for efficient O(n) operations (via list slicing) and easy joining for display.
+    If treating as lines, we'd need more complex splitting/joining, but characters suffice for this simple editor.
+    """
+    def __init__(self):
+        self.text_list = []  # List of characters representing the text buffer
+
+    def insert_text(self, position, text):
+        """
+        Inserts the given text (string) at the specified 0-based position in the text buffer.
+        If position > current length, it appends (but for simplicity, we assume valid positions).
+        """
+        chars = list(text)  # Convert text to list of characters
+        self.text_list[position:position] = chars  # Insert at position (slicing trick)
+
+    def delete_text(self, position, length):
+        """
+        Deletes 'length' characters starting from the specified 0-based position.
+        If position + length > current length, it deletes to the end.
+        """
+        del self.text_list[position:position + length]
+
+    def get_text(self):
+        """
+        Returns the current text as a single string by joining the character list.
+        """
+        return ''.join(self.text_list)
+
+# Concrete Command: InsertCommand
+class InsertCommand(Command):
+    """
+    Concrete command for inserting text into the TextEditor.
+    Stores the position and text length in the constructor for enabling undo without depending on current state.
+    This encapsulation ensures the undo can precisely reverse the insertion regardless of subsequent operations.
+    """
+    def __init__(self, receiver, position, text):
+        super().__init__(receiver)
+        self.position = position
+        self.text = text
+        self.text_length = len(text)  # Store length for undo
+
+    def execute(self):
+        """
+        Executes the insertion by calling the receiver's insert_text method.
+        """
+        self.receiver.insert_text(self.position, self.text)
+
+    def undo(self):
+        """
+        Undoes the insertion by deleting exactly the stored number of characters from the original position.
+        Note: This assumes no other commands have modified the text in a way that shifts positions;
+        in a full undo stack, more state (e.g., backup of affected region) might be needed for robustness.
+        """
+        self.receiver.delete_text(self.position, self.text_length)
+
+# Invoker: Editor
+class Editor:
+    """
+    The invoker class that manages command execution and undo history.
+    It decouples the client from the commands, allowing queuing and undoing without knowing command details.
+    History is a simple list (stack) for LIFO undo.
+    """
+    def __init__(self, receiver):
+        self.receiver = receiver
+        self.history = []  # List to store executed commands for undo
+
+    def execute_command(self, command):
+        """
+        Executes the given command and adds it to the undo history.
+        """
+        command.execute()
+        self.history.append(command)
+
+    def undo_last(self):
+        """
+        Undoes the most recently executed command if history is not empty.
+        If empty, does nothing (edge case handling as per requirements).
+        """
+        if self.history:
+            last_command = self.history.pop()
+            last_command.undo()
+
+# Demonstration
+if __name__ == "__main__":
+    # Create receiver
+    text_editor = TextEditor()
+    
+    # Create invoker with receiver
+    editor = Editor(text_editor)
+    
+    # Create and execute a command: insert "Hello World" at position 0
+    insert_cmd = InsertCommand(text_editor, 0, "Hello World")
+    print("Before execute:")
+    print(text_editor.get_text() or "(empty)")
+    
+    editor.execute_command(insert_cmd)
+    print("After execute:")
+    print(text_editor.get_text())
+    
+    # Undo
+    editor.undo_last()
+    print("After undo:")
+    print(text_editor.get_text() or "(empty)")
+    
+    # Example output:
+    # Before execute:
+    # (empty)
+    # After execute:
+    # Hello World
+    # After undo:
+    # (empty)
