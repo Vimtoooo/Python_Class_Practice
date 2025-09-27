@@ -2986,3 +2986,178 @@ class Command(ABC):
 **KEY POINT:** The command pattern turns requests into objects that can be stored, passed around, and executed later. The invoker doesn't need to know how to perform the operations, it just calls `execute()` on the command object. This enables features like undo/redo, queuing operations and logging commands.
 
 Advanced example im practice.py lines 2064 - 2206.
+
+### Adapter Pattern:
+
+The adapter patterns allow objects with incompatible interfaces to work together, it acts as a bridge by wrapping an existing class with a new interface that clients expect.
+
+#### Simple Example:
+
+Here are two systems with incompatible interfaces:
+
+```python
+# Two systems with incompatible interfaces:
+class OldPrinter:
+    def old_print(self, text):
+        return f"OLD: {text}"
+
+class NewPrinter:
+    def print(self, text):
+        return f"NEW: {text}"
+```
+
+Notice how the old printer class uses the `old_print()` method while the new printer class utilizes the `print()` method. Now, we'll create an adapter to help bring back the original functioning of the old printer with the new interface!
+
+```python
+# Define an Adapter Class for incompatible interfaces to work together (into the expected interface)
+class PrinterAdapter:
+    def __init__(self, old_printer):
+        self.old_printer = old_printer # Wields with composition
+
+    def print(self, text):
+        # Adapt old interface to new interface
+        return self.old_printer.old_print(text)
+```
+
+The adapter class wraps the old printer and provides the expected interface.
+All that is left to do is to apply both printers into the same client code:
+
+```python
+def print_document(printer, text):
+    return printer.print(text)  # Expects print() method
+
+# Use new printer directly
+new_printer = NewPrinter()
+print(print_document(new_printer, "Hello"))
+
+# Use old printer through adapter
+old_printer = OldPrinter()
+adapter = PrinterAdapter(old_printer)
+print(print_document(adapter, "Hello"))
+```
+
+When using the adapter instance, the adapter class uses **composition** to simply call the instance which has been passed into the init method inside the Adapter class, making it flexible and easy to call the `OldPrinter`'s `old_print()` method, while simultaneously providing the expected interface in the client code!
+
+Output:
+
+```
+NEW: Hello
+OLD: Hello
+```
+
+#### Example with Media Players:
+
+Create another example with media players:
+
+```python
+class Mp3Player:
+    def play_mp3(self, filename):
+        return f"Playing MP3: {filename}"
+
+class Mp4Player:
+    def play_mp4(self, filename):
+        return f"Playing MP4: {filename}"
+
+class MediaAdapter:
+    def __init__(self, player, audio_type):
+        self.player = player
+        self.audio_type = audio_type
+
+    def play(self, filename):
+        if self.audio_type == "mp3":
+            return self.player.play_mp3(filename)
+        elif self.audio_type == "mp4":
+            return self.player.play_mp4(filename)
+
+class AudioPlayer:
+    def play(self, audio_type, filename):
+        if audio_type == "mp3":
+            return Mp3Player().play_mp3(filename)
+        else:
+            adapter = MediaAdapter(Mp4Player(), audio_type)
+            return adapter.play(filename)
+
+player = AudioPlayer()
+print(player.play("mp3", "song.mp3"))
+print(player.play("mp4", "video.mp4"))
+```
+
+Output:
+
+```
+Playing MP3: song.mp3
+Playing MP4: video.mp4
+```
+
+#### How does it Work?
+
+The **Adapter pattern** primarily uses these types of classes when in action:
+
+##### **System (Adaptee) Classes:**
+
+- These are existing classes with incompatible interfaces (e.g. `OldPinter`, `Mp3Player`, `Mp4Player`);
+- They provide useful functionality but don't match the interface expectations by the client code.
+
+##### **Adapter Class:**
+
+- This class wraps (composes) one or more system/adaptee classes;
+- It translates the expected interface into calls to the adapter's methods (e.g. `PrinterAdapter`, `MediaAdapter`);
+- The Adapter class is the **key component**, since it uses composition over inheritance to delegate calls to the adaptee(s).
+
+###### Why does it use Composition?
+
+- **Composition** allows the adapter to hold a reference to the object it adapts;
+- The adapter **delegates calls** to the wrapped object, translating adapters and results as needed;
+- This avoids tight coupling and inheritance issues, making the adapter flexible and easy to extend!
+
+Example:
+
+```python
+class OldPrinter:
+    def old_print(self, text):
+        return f"OLD: {text}"
+
+class PrinterAdapter:
+    def __init__(self, old_printer):
+        self.old_printer = old_printer  # Composition
+
+    def print(self, text):
+        return self.old_printer.old_print(text)  # Delegation
+
+# Usage
+adapter = PrinterAdapter(OldPrinter())
+print(adapter.print("Hello"))  # OLD: Hello
+```
+
+##### **Client Code** (Class or no class, **Optional**):
+
+- The client interacts with the adapter using the expected interface (e.g. calls `print()` or `play()`);
+- Optionally, you may have a client-facing class that uses the adapter internally (e.g. `AudioPlayer`).
+
+#### Key Characteristics:
+
+- **Interface Conversion:** Adapts one interface to another;
+- **Composition:** The adapter holds (wraps) an instance of the class it adapts, rather than inheriting from it;
+- **Decoupling:** Keeps client code independent from legacy or third-party code;
+- **Single Responsibility:** The adapter only translates between interfaces, not business logic!
+
+#### Real-World Examples:
+
+- **Integrating Legacy Systems:** When wrapping an old printer class `old_print()` so it can be used with new code expecting a `print()` method;
+- **Media Players:** Adapting an `Mp3Player` and `Mp4Player` to a common `play()` interface;
+- **Database Drivers:** Adapting distinct database API's to a unified interface for querying;
+- **Payment Gateways:** Wrapping various payment provider SDK's to a standard `process_payment()` method;
+- `GUI Frameworks:\*\* Adapting different widgets from different libraries to a common interface.
+
+#### Summary:
+
+|   **Aspect**    | **Adapter Pattern**                         |
+| :-------------: | ------------------------------------------- |
+|     Purpose     | Bridge incompatible interfaces.             |
+|    Mechanism    | Composition (wraps/adapts another object).  |
+|   Key Benefit   | Decouples client from legacy/3rd-party.     |
+| Real-World uses | Legacy integration, media, payments, GUI... |
+
+**KEY POINT:** The adapter pattern makes incompatible interfaces work together, by wrapping an existing class with a new interface. The adapter translates calls from the expected interface into the actual interface of the wrapped object, this is useful for integrating legacy code or third-party libraries without modifying existing code.
+
+Complex example in practice.py lines 2210 - 2555.

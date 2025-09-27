@@ -2177,26 +2177,26 @@ class Editor:
             last_command.undo()
 
 # Demonstration
-if __name__ == "__main__":
+# if __name__ == "__main__":
     # Create receiver
-    text_editor = TextEditor()
+    # text_editor = TextEditor()
     
-    # Create invoker with receiver
-    editor = Editor(text_editor)
+    # # Create invoker with receiver
+    # editor = Editor(text_editor)
     
-    # Create and execute a command: insert "Hello World" at position 0
-    insert_cmd = InsertCommand(text_editor, 0, "Hello World")
-    print("Before execute:")
-    print(text_editor.get_text() or "(empty)")
+    # # Create and execute a command: insert "Hello World" at position 0
+    # insert_cmd = InsertCommand(text_editor, 0, "Hello World")
+    # print("Before execute:")
+    # print(text_editor.get_text() or "(empty)")
     
-    editor.execute_command(insert_cmd)
-    print("After execute:")
-    print(text_editor.get_text())
+    # editor.execute_command(insert_cmd)
+    # print("After execute:")
+    # print(text_editor.get_text())
     
-    # Undo
-    editor.undo_last()
-    print("After undo:")
-    print(text_editor.get_text() or "(empty)")
+    # # Undo
+    # editor.undo_last()
+    # print("After undo:")
+    # print(text_editor.get_text() or "(empty)")
     
     # Example output:
     # Before execute:
@@ -2205,3 +2205,352 @@ if __name__ == "__main__":
     # Hello World
     # After undo:
     # (empty)
+
+
+# Implement the Adapter pattern!
+from abc import ABC, abstractmethod
+
+class DataProcessor(ABC):
+    """Modern interface for data processing components."""
+    
+    @abstractmethod
+    def process_data(self, data):
+        """Process the provided data."""
+        pass
+        
+    @abstractmethod
+    def get_results(self):
+        """Retrieve the processed results."""
+        pass
+
+
+class DataVisualizer(ABC):
+    """Modern interface for data visualization components."""
+    
+    @abstractmethod
+    def visualize(self, data):
+        """Create a visualization of the data."""
+        pass
+        
+    @abstractmethod
+    def export_visualization(self, filename):
+        """Export the visualization to a file."""
+        pass
+
+# This file simulates a legacy system with incompatible interfaces
+# DO NOT MODIFY THIS FILE - it represents code you cannot change
+
+class LegacyDataAnalyzer:
+    """Legacy class for data analysis with incompatible interface."""
+    
+    def __init__(self):
+        self.data = None
+        self.analysis_complete = False
+        self.results = {}
+    
+    def load_data(self, data_points):
+        """Load data into the analyzer."""
+        self.data = data_points
+        print("Legacy analyzer: Data loaded successfully")
+        return True
+    
+    def run_analysis(self):
+        """Run the analysis process."""
+        if not self.data:
+            print("Legacy analyzer: No data to analyze")
+            return False
+            
+        # Simulate analysis
+        self.results = {
+            'mean': sum(self.data) / len(self.data),
+            'max': max(self.data),
+            'min': min(self.data)
+        }
+        self.analysis_complete = True
+        print("Legacy analyzer: Analysis complete")
+        return True
+    
+    def fetch_results(self):
+        """Get the analysis results."""
+        if not self.analysis_complete:
+            print("Legacy analyzer: Analysis not yet complete")
+            return None
+        return self.results
+
+
+class LegacyChartGenerator:
+    """Legacy class for chart generation with incompatible interface."""
+    
+    def __init__(self):
+        self.chart_data = None
+        self.chart_type = None
+        self.chart_created = False
+    
+    def initialize_chart(self, chart_type):
+        """Set up the chart with a specific type."""
+        self.chart_type = chart_type
+        self.chart_created = False
+        print(f"Legacy chart generator: Initialized {chart_type} chart")
+    
+    def add_data_series(self, data):
+        """Add data to the chart."""
+        self.chart_data = data
+        print("Legacy chart generator: Data series added")
+    
+    def render(self):
+        """Generate the chart."""
+        if not self.chart_type or self.chart_data is None:
+            print("Legacy chart generator: Cannot render without chart type and data")
+            return False
+            
+        self.chart_created = True
+        print(f"Legacy chart generator: {self.chart_type} chart rendered with {len(self.chart_data)} data points")
+        return True
+    
+    def save_chart(self, file_path):
+        """Save the chart to a file."""
+        if not self.chart_created:
+            print("Legacy chart generator: No chart to save")
+            return False
+            
+        print(f"Legacy chart generator: Chart saved to {file_path}")
+        return True
+
+class LegacyDataAnalyzerAdapter(DataProcessor):
+    """Adapter for LegacyDataAnalyzer to work with the DataProcessor interface."""
+    
+    def __init__(self):
+        self.legacy_analyzer = LegacyDataAnalyzer()
+        
+    def process_data(self, data):
+        """Process data using the legacy analyzer."""
+        if not isinstance(data, list):
+            raise ValueError("Data must be a list of numeric values")
+            
+        if not all(isinstance(item, (int, float)) for item in data):
+            raise ValueError("All data items must be numeric")
+            
+        self.legacy_analyzer.load_data(data)
+        self.legacy_analyzer.run_analysis()
+        return True
+        
+    def get_results(self):
+        """Get results from the legacy analyzer."""
+        results = self.legacy_analyzer.fetch_results()
+        if results is None:
+            return {}
+        return results
+
+
+class LegacyChartGeneratorAdapter(DataVisualizer):
+    """Adapter for LegacyChartGenerator to work with the DataVisualizer interface."""
+    
+    def __init__(self, chart_type="bar"):
+        self.legacy_chart_generator = LegacyChartGenerator()
+        self.chart_type = chart_type
+        self.legacy_chart_generator.initialize_chart(self.chart_type)
+        
+    def visualize(self, data):
+        """Create visualization using the legacy chart generator."""
+        if not isinstance(data, list):
+            raise ValueError("Data must be a list of numeric values")
+            
+        if not all(isinstance(item, (int, float)) for item in data):
+            raise ValueError("All data items must be numeric")
+            
+        self.legacy_chart_generator.add_data_series(data)
+        success = self.legacy_chart_generator.render()
+        return success
+        
+    def export_visualization(self, filename):
+        """Export the visualization to a file using the legacy chart generator."""
+        if not filename.endswith(('.png', '.jpg', '.pdf')):
+            filename += '.png'  # Default to PNG if no extension
+            
+        return self.legacy_chart_generator.save_chart(filename)
+
+class AnalyticsSystem:
+    """Modern analytics system that works with the new interfaces."""
+    
+    def __init__(self, data_processor: DataProcessor, data_visualizer: DataVisualizer):
+        """Initialize with processor and visualizer components."""
+        self.processor = data_processor
+        self.visualizer = data_visualizer
+        
+    def analyze_and_visualize(self, data, output_file="output.png"):
+        """Process data and create visualization."""
+        # Process the data
+        self.processor.process_data(data)
+        results = self.processor.get_results()
+        
+        # Create visualization of the results
+        # For simplicity, we'll visualize the original data
+        # In a real system, you might visualize the results
+        self.visualizer.visualize(data)
+        self.visualizer.export_visualization(output_file)
+        
+        return {
+            "analysis_results": results,
+            "visualization_file": output_file
+        }
+        
+    def get_analysis_summary(self):
+        """Get a summary of the analysis results."""
+        results = self.processor.get_results()
+        if not results:
+            return "No analysis results available"
+            
+        summary = []
+        for key, value in results.items():
+            if isinstance(value, (int, float)):
+                summary.append(f"{key}: {value:.2f}")
+            else:
+                summary.append(f"{key}: {value}")
+                
+        return "\n".join(summary)
+
+# Comprehensive test case handler
+test_case = input()
+
+if test_case == "basic_adapter_test":
+    # Test basic adapter functionality
+    processor = LegacyDataAnalyzerAdapter()
+    data = [1, 2, 3, 4, 5]
+    processor.process_data(data)
+    results = processor.get_results()
+    print(f"Results: {results}")
+
+elif test_case == "visualizer_adapter_test":
+    # Test visualizer adapter
+    visualizer = LegacyChartGeneratorAdapter("bar")
+    data = [10, 20, 30, 40, 50]
+    success = visualizer.visualize(data)
+    if success:
+        export_success = visualizer.export_visualization("test_chart.png")
+        print(f"Visualization exported: {export_success}")
+
+elif test_case == "analytics_system_test":
+    # Test complete analytics system
+    processor = LegacyDataAnalyzerAdapter()
+    visualizer = LegacyChartGeneratorAdapter("line")
+    system = AnalyticsSystem(processor, visualizer)
+    
+    data = [15, 25, 35, 45, 55]
+    result = system.analyze_and_visualize(data, "analytics_output.png")
+    print(f"System result: {result}")
+
+elif test_case == "validation_error_test":
+    # Test validation errors
+    processor = LegacyDataAnalyzerAdapter()
+    try:
+        processor.process_data("invalid_data")
+        print("Validation failed - should have raised ValueError")
+    except ValueError as e:
+        print(f"Validation error caught: {e}")
+
+elif test_case == "empty_data_test":
+    # Test with empty data
+    processor = LegacyDataAnalyzerAdapter()
+    try:
+        processor.process_data([])
+        results = processor.get_results()
+        print(f"Empty data results: {results}")
+    except Exception as e:
+        print(f"Empty data error: {e}")
+
+elif test_case == "chart_types_test":
+    # Test different chart types
+    chart_types = ["bar", "line", "pie"]
+    data = [5, 15, 25, 35]
+    
+    for chart_type in chart_types:
+        visualizer = LegacyChartGeneratorAdapter(chart_type)
+        success = visualizer.visualize(data)
+        print(f"{chart_type} chart created: {success}")
+
+elif test_case == "file_extension_test":
+    # Test file extension handling
+    visualizer = LegacyChartGeneratorAdapter()
+    data = [1, 2, 3, 4]
+    visualizer.visualize(data)
+    
+    # Test various filename formats
+    filenames = ["test", "test.jpg", "test.pdf", "test.png"]
+    for filename in filenames:
+        success = visualizer.export_visualization(filename)
+        print(f"Export '{filename}': {success}")
+
+elif test_case == "summary_test":
+    # Test analysis summary
+    processor = LegacyDataAnalyzerAdapter()
+    visualizer = LegacyChartGeneratorAdapter()
+    system = AnalyticsSystem(processor, visualizer)
+    
+    data = [10, 20, 30, 40, 50, 60]
+    system.analyze_and_visualize(data)
+    summary = system.get_analysis_summary()
+    print("Analysis Summary:")
+    print(summary)
+
+elif test_case == "mixed_data_test":
+    # Test with mixed numeric data
+    processor = LegacyDataAnalyzerAdapter()
+    data = [1.5, 2, 3.7, 4, 5.2]
+    processor.process_data(data)
+    results = processor.get_results()
+    print(f"Mixed data results: {results}")
+
+elif test_case == "invalid_numeric_test":
+    # Test with invalid numeric data
+    processor = LegacyDataAnalyzerAdapter()
+    try:
+        processor.process_data([1, 2, "three", 4, 5])
+        print("Validation failed - should have raised ValueError")
+    except ValueError as e:
+        print(f"Invalid numeric data error: {e}")
+
+elif test_case == "no_results_summary_test":
+    # Test summary with no results
+    processor = LegacyDataAnalyzerAdapter()
+    visualizer = LegacyChartGeneratorAdapter()
+    system = AnalyticsSystem(processor, visualizer)
+    
+    summary = system.get_analysis_summary()
+    print(f"No results summary: {summary}")
+
+elif test_case == "large_dataset_test":
+    # Test with larger dataset
+    processor = LegacyDataAnalyzerAdapter()
+    data = list(range(1, 101))  # 1 to 100
+    processor.process_data(data)
+    results = processor.get_results()
+    print(f"Large dataset - Mean: {results.get('mean', 'N/A'):.2f}")
+    print(f"Large dataset - Min: {results.get('min', 'N/A')}")
+    print(f"Large dataset - Max: {results.get('max', 'N/A')}")
+
+elif test_case == "complete_workflow_test":
+    # Test complete workflow with multiple operations
+    processor = LegacyDataAnalyzerAdapter()
+    bar_visualizer = LegacyChartGeneratorAdapter("bar")
+    line_visualizer = LegacyChartGeneratorAdapter("line")
+    
+    data = [12, 18, 25, 32, 28, 35, 42]
+    
+    # Create analytics systems with different visualizers
+    bar_system = AnalyticsSystem(processor, bar_visualizer)
+    line_system = AnalyticsSystem(LegacyDataAnalyzerAdapter(), line_visualizer)
+    
+    # Run analyses
+    bar_result = bar_system.analyze_and_visualize(data, "bar_chart.png")
+    line_result = line_system.analyze_and_visualize(data, "line_chart.png")
+    
+    print("Complete workflow test completed")
+    print(f"Bar chart result: {bar_result['visualization_file']}")
+    print(f"Line chart result: {line_result['visualization_file']}")
+    
+    # Get summaries
+    print("Bar system summary:")
+    print(bar_system.get_analysis_summary())
+    print("Line system summary:")
+    print(line_system.get_analysis_summary())
+
