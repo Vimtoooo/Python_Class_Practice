@@ -2410,147 +2410,535 @@ class AnalyticsSystem:
         return "\n".join(summary)
 
 # Comprehensive test case handler
+# test_case = input()
+
+# if test_case == "basic_adapter_test":
+#     # Test basic adapter functionality
+#     processor = LegacyDataAnalyzerAdapter()
+#     data = [1, 2, 3, 4, 5]
+#     processor.process_data(data)
+#     results = processor.get_results()
+#     print(f"Results: {results}")
+
+# elif test_case == "visualizer_adapter_test":
+#     # Test visualizer adapter
+#     visualizer = LegacyChartGeneratorAdapter("bar")
+#     data = [10, 20, 30, 40, 50]
+#     success = visualizer.visualize(data)
+#     if success:
+#         export_success = visualizer.export_visualization("test_chart.png")
+#         print(f"Visualization exported: {export_success}")
+
+# elif test_case == "analytics_system_test":
+#     # Test complete analytics system
+#     processor = LegacyDataAnalyzerAdapter()
+#     visualizer = LegacyChartGeneratorAdapter("line")
+#     system = AnalyticsSystem(processor, visualizer)
+    
+#     data = [15, 25, 35, 45, 55]
+#     result = system.analyze_and_visualize(data, "analytics_output.png")
+#     print(f"System result: {result}")
+
+# elif test_case == "validation_error_test":
+#     # Test validation errors
+#     processor = LegacyDataAnalyzerAdapter()
+#     try:
+#         processor.process_data("invalid_data")
+#         print("Validation failed - should have raised ValueError")
+#     except ValueError as e:
+#         print(f"Validation error caught: {e}")
+
+# elif test_case == "empty_data_test":
+#     # Test with empty data
+#     processor = LegacyDataAnalyzerAdapter()
+#     try:
+#         processor.process_data([])
+#         results = processor.get_results()
+#         print(f"Empty data results: {results}")
+#     except Exception as e:
+#         print(f"Empty data error: {e}")
+
+# elif test_case == "chart_types_test":
+#     # Test different chart types
+#     chart_types = ["bar", "line", "pie"]
+#     data = [5, 15, 25, 35]
+    
+#     for chart_type in chart_types:
+#         visualizer = LegacyChartGeneratorAdapter(chart_type)
+#         success = visualizer.visualize(data)
+#         print(f"{chart_type} chart created: {success}")
+
+# elif test_case == "file_extension_test":
+#     # Test file extension handling
+#     visualizer = LegacyChartGeneratorAdapter()
+#     data = [1, 2, 3, 4]
+#     visualizer.visualize(data)
+    
+#     # Test various filename formats
+#     filenames = ["test", "test.jpg", "test.pdf", "test.png"]
+#     for filename in filenames:
+#         success = visualizer.export_visualization(filename)
+#         print(f"Export '{filename}': {success}")
+
+# elif test_case == "summary_test":
+#     # Test analysis summary
+#     processor = LegacyDataAnalyzerAdapter()
+#     visualizer = LegacyChartGeneratorAdapter()
+#     system = AnalyticsSystem(processor, visualizer)
+    
+#     data = [10, 20, 30, 40, 50, 60]
+#     system.analyze_and_visualize(data)
+#     summary = system.get_analysis_summary()
+#     print("Analysis Summary:")
+#     print(summary)
+
+# elif test_case == "mixed_data_test":
+#     # Test with mixed numeric data
+#     processor = LegacyDataAnalyzerAdapter()
+#     data = [1.5, 2, 3.7, 4, 5.2]
+#     processor.process_data(data)
+#     results = processor.get_results()
+#     print(f"Mixed data results: {results}")
+
+# elif test_case == "invalid_numeric_test":
+#     # Test with invalid numeric data
+#     processor = LegacyDataAnalyzerAdapter()
+#     try:
+#         processor.process_data([1, 2, "three", 4, 5])
+#         print("Validation failed - should have raised ValueError")
+#     except ValueError as e:
+#         print(f"Invalid numeric data error: {e}")
+
+# elif test_case == "no_results_summary_test":
+#     # Test summary with no results
+#     processor = LegacyDataAnalyzerAdapter()
+#     visualizer = LegacyChartGeneratorAdapter()
+#     system = AnalyticsSystem(processor, visualizer)
+    
+#     summary = system.get_analysis_summary()
+#     print(f"No results summary: {summary}")
+
+# elif test_case == "large_dataset_test":
+#     # Test with larger dataset
+#     processor = LegacyDataAnalyzerAdapter()
+#     data = list(range(1, 101))  # 1 to 100
+#     processor.process_data(data)
+#     results = processor.get_results()
+#     print(f"Large dataset - Mean: {results.get('mean', 'N/A'):.2f}")
+#     print(f"Large dataset - Min: {results.get('min', 'N/A')}")
+#     print(f"Large dataset - Max: {results.get('max', 'N/A')}")
+
+# elif test_case == "complete_workflow_test":
+#     # Test complete workflow with multiple operations
+#     processor = LegacyDataAnalyzerAdapter()
+#     bar_visualizer = LegacyChartGeneratorAdapter("bar")
+#     line_visualizer = LegacyChartGeneratorAdapter("line")
+    
+#     data = [12, 18, 25, 32, 28, 35, 42]
+    
+#     # Create analytics systems with different visualizers
+#     bar_system = AnalyticsSystem(processor, bar_visualizer)
+#     line_system = AnalyticsSystem(LegacyDataAnalyzerAdapter(), line_visualizer)
+    
+#     # Run analyses
+#     bar_result = bar_system.analyze_and_visualize(data, "bar_chart.png")
+#     line_result = line_system.analyze_and_visualize(data, "line_chart.png")
+    
+#     print("Complete workflow test completed")
+#     print(f"Bar chart result: {bar_result['visualization_file']}")
+#     print(f"Line chart result: {line_result['visualization_file']}")
+    
+#     # Get summaries
+#     print("Bar system summary:")
+#     print(bar_system.get_analysis_summary())
+#     print("Line system summary:")
+#     print(line_system.get_analysis_summary())
+
+
+# Implement the Decorator Pattern!
+from abc import ABC, abstractmethod
+
+class Beverage(ABC):
+    """
+    Abstract base class for all beverages.
+    """
+    def __init__(self):
+        # TODO: Initialize description attribute with "Unknown Beverage"
+        self.description = "Unknown Beverage"
+    
+    def get_description(self):
+        # TODO: Return the description attribute
+        return self.description
+    
+    @abstractmethod
+    def cost(self):
+        # TODO: Abstract method that must be implemented by concrete beverage classes
+        # TODO: Should return the cost of the beverage as a float
+        pass
+
+
+class Espresso(Beverage):
+    """
+    A concrete beverage implementation - Espresso.
+    """
+    def __init__(self):
+        # TODO: Call parent constructor using super()
+        # TODO: Set description to "Espresso"
+        self.beverage = super().__init__()
+        self.description = "Espresso"
+    
+    def cost(self):
+        # TODO: Return the cost of Espresso (1.99)
+        return 1.99
+
+
+class HouseBlend(Beverage):
+    """
+    A concrete beverage implementation - House Blend Coffee.
+    """
+    def __init__(self):
+        # TODO: Call parent constructor using super()
+        # TODO: Set description to "House Blend Coffee"
+        self.beverage = super().__init__()
+        self.description = "House Blend Coffee"
+    
+    def cost(self):
+        # TODO: Return the cost of House Blend Coffee (0.89)
+        return 0.89
+
+
+class DarkRoast(Beverage):
+    """
+    A concrete beverage implementation - Dark Roast Coffee.
+    """
+    def __init__(self):
+        # TODO: Call parent constructor using super()
+        # TODO: Set description to "Dark Roast Coffee"
+        self.beverage = super().__init__()
+        self.description = "Dark Roast Coffee"
+
+    def cost(self):
+        # TODO: Return the cost of Dark Roast Coffee (0.99)
+        return 0.99
+
+
+class Decaf(Beverage):
+    """
+    A concrete beverage implementation - Decaf Coffee.
+    """
+    def __init__(self):
+        # TODO: Call parent constructor using super()
+        # TODO: Set description to "Decaf Coffee"
+        self.beverage = super().__init__()
+        self.description = "Decaf Coffee"
+    
+    def cost(self):
+        # TODO: Return the cost of Decaf Coffee (1.05)
+        return 1.05
+
+class CondimentDecorator(Beverage):
+    """
+    Abstract decorator class for all condiments.
+    """
+    @abstractmethod
+    def get_description(self):
+        # TODO: Abstract method that must be implemented by concrete decorators
+        # TODO: Should return the description of the beverage with the condiment added
+        pass
+
+
+class Milk(CondimentDecorator):
+    """
+    Concrete decorator for adding milk to a beverage.
+    """
+    def __init__(self, beverage):
+        # TODO: Store the beverage object as self.beverage
+        # TODO: This beverage will be decorated with milk
+        self.beverage = beverage
+    
+    def get_description(self):
+        # TODO: Return the beverage's description plus " + Milk"
+        # TODO: Use self.beverage.get_description() to get the base description
+        return self.beverage.get_description() + " + Milk"
+    
+    def cost(self):
+        # TODO: Return the beverage's cost plus 0.10 for milk
+        # TODO: Use self.beverage.cost() to get the base cost
+        return self.beverage.cost() + 0.10
+
+
+class Mocha(CondimentDecorator):
+    """
+    Concrete decorator for adding mocha to a beverage.
+    """
+    def __init__(self, beverage):
+        # TODO: Store the beverage object as self.beverage
+        # TODO: This beverage will be decorated with mocha
+        self.beverage = beverage
+    
+    def get_description(self):
+        # TODO: Return the beverage's description plus " + Mocha"
+        # TODO: Use self.beverage.get_description() to get the base description
+        return self.beverage.get_description() + " + Mocha"
+    
+    def cost(self):
+        # TODO: Return the beverage's cost plus 0.20 for mocha
+        # TODO: Use self.beverage.cost() to get the base cost
+        return self.beverage.cost() + 0.20
+
+
+class Soy(CondimentDecorator):
+    """
+    Concrete decorator for adding soy to a beverage.
+    """
+    def __init__(self, beverage):
+        # TODO: Store the beverage object as self.beverage
+        # TODO: This beverage will be decorated with soy
+        self.beverage = beverage
+    
+    def get_description(self):
+        # TODO: Return the beverage's description plus " + Soy"
+        # TODO: Use self.beverage.get_description() to get the base description
+        return self.beverage.get_description() + " + Soy"
+    
+    def cost(self):
+        # TODO: Return the beverage's cost plus 0.15 for soy
+        # TODO: Use self.beverage.cost() to get the base cost
+        return self.beverage.cost() + 0.15
+
+
+class Whip(CondimentDecorator):
+    """
+    Concrete decorator for adding whipped cream to a beverage.
+    """
+    def __init__(self, beverage):
+        # TODO: Store the beverage object as self.beverage
+        # TODO: This beverage will be decorated with whipped cream
+        self.beverage = beverage
+    
+    def get_description(self):
+        # TODO: Return the beverage's description plus " + Whip"
+        # TODO: Use self.beverage.get_description() to get the base description
+        return self.beverage.get_description() + " + Whip"
+    
+    def cost(self):
+        # TODO: Return the beverage's cost plus 0.10 for whipped cream
+        # TODO: Use self.beverage.cost() to get the base cost
+        return self.beverage.cost() + 0.10
+
+class CoffeeShop:
+    """
+    A class that manages coffee orders and inventory.
+    """
+    def __init__(self):
+        # TODO: Initialize an empty list to store orders
+        # TODO: This list will hold beverage objects (both plain and decorated)
+        self.beverage_list = []
+    
+    def add_order(self, beverage):
+        # TODO: Add the beverage to the orders list
+        # TODO: Return the total number of orders after adding this one
+        # TODO: Use len() to get the count after appending
+        self.beverage_list.append(beverage)
+        return len(self.beverage_list)
+    
+    def get_total_cost(self):
+        # TODO: Calculate and return the total cost of all orders
+        # TODO: Use sum() with a generator expression
+        # TODO: Call the cost() method on each beverage in self.orders
+        total_cost = sum([item.cost() for item in self.beverage_list])
+        return total_cost
+    
+    def print_orders(self):
+        # TODO: Create a formatted string showing all orders
+        # TODO: Initialize an empty result list
+        res_list = []
+        # TODO: Loop through orders with enumerate() starting at 1
+        for i, order in enumerate(self.beverage_list):
+            if i > 1:
+                continue
+        # TODO: For each order, format as "Order #X: description - $cost"
+            receipt = "Order #{order}: {order.get_description()} - ${order.cost():.2f}"
+        # TODO: Use beverage.get_description() and beverage.cost() 
+        # TODO: Format cost to 2 decimal places using :.2f
+        # TODO: Join all order strings with newlines and return
+            res_list.append(receipt)
+        formatted_receipt = "\n".join(res_list)
+        return formatted_receipt
+    
+    def clear_orders(self):
+        # TODO: Remove all orders from the orders list
+        # TODO: Reset self.orders to an empty list
+        self.beverage_list.clear()
+    
+    def get_order_count(self):
+        # TODO: Return the number of orders currently in the shop
+        # TODO: Use len() on the orders list
+        return len(self.beverage_list)
+
+# Comprehensive test case handler
 test_case = input()
 
-if test_case == "basic_adapter_test":
-    # Test basic adapter functionality
-    processor = LegacyDataAnalyzerAdapter()
-    data = [1, 2, 3, 4, 5]
-    processor.process_data(data)
-    results = processor.get_results()
-    print(f"Results: {results}")
+if test_case == "basic_beverage_test":
+    # Test basic beverage functionality
+    espresso = Espresso()
+    print(f"Description: {espresso.get_description()}")
+    print(f"Cost: ${espresso.cost():.2f}")
 
-elif test_case == "visualizer_adapter_test":
-    # Test visualizer adapter
-    visualizer = LegacyChartGeneratorAdapter("bar")
-    data = [10, 20, 30, 40, 50]
-    success = visualizer.visualize(data)
-    if success:
-        export_success = visualizer.export_visualization("test_chart.png")
-        print(f"Visualization exported: {export_success}")
+elif test_case == "all_beverages_test":
+    # Test all beverage types
+    beverages = [Espresso(), HouseBlend(), DarkRoast(), Decaf()]
+    for beverage in beverages:
+        print(f"{beverage.get_description()}: ${beverage.cost():.2f}")
 
-elif test_case == "analytics_system_test":
-    # Test complete analytics system
-    processor = LegacyDataAnalyzerAdapter()
-    visualizer = LegacyChartGeneratorAdapter("line")
-    system = AnalyticsSystem(processor, visualizer)
+elif test_case == "single_condiment_test":
+    # Test single condiment decoration
+    espresso = Espresso()
+    espresso_with_milk = Milk(espresso)
+    print(f"Description: {espresso_with_milk.get_description()}")
+    print(f"Cost: ${espresso_with_milk.cost():.2f}")
+
+elif test_case == "multiple_condiments_test":
+    # Test multiple condiment decorations
+    house_blend = HouseBlend()
+    decorated_coffee = Mocha(Soy(Whip(house_blend)))
+    print(f"Description: {decorated_coffee.get_description()}")
+    print(f"Cost: ${decorated_coffee.cost():.2f}")
+
+elif test_case == "all_condiments_test":
+    # Test all condiments on one beverage
+    dark_roast = DarkRoast()
+    fully_loaded = Milk(Mocha(Soy(Whip(dark_roast))))
+    print(f"Description: {fully_loaded.get_description()}")
+    print(f"Cost: ${fully_loaded.cost():.2f}")
+
+elif test_case == "cost_calculation_test":
+    # Test cost calculations for different combinations
+    espresso = Espresso()
     
-    data = [15, 25, 35, 45, 55]
-    result = system.analyze_and_visualize(data, "analytics_output.png")
-    print(f"System result: {result}")
-
-elif test_case == "validation_error_test":
-    # Test validation errors
-    processor = LegacyDataAnalyzerAdapter()
-    try:
-        processor.process_data("invalid_data")
-        print("Validation failed - should have raised ValueError")
-    except ValueError as e:
-        print(f"Validation error caught: {e}")
-
-elif test_case == "empty_data_test":
-    # Test with empty data
-    processor = LegacyDataAnalyzerAdapter()
-    try:
-        processor.process_data([])
-        results = processor.get_results()
-        print(f"Empty data results: {results}")
-    except Exception as e:
-        print(f"Empty data error: {e}")
-
-elif test_case == "chart_types_test":
-    # Test different chart types
-    chart_types = ["bar", "line", "pie"]
-    data = [5, 15, 25, 35]
+    # Single additions
+    with_milk = Milk(espresso)
+    with_mocha = Mocha(espresso)
     
-    for chart_type in chart_types:
-        visualizer = LegacyChartGeneratorAdapter(chart_type)
-        success = visualizer.visualize(data)
-        print(f"{chart_type} chart created: {success}")
+    print(f"Espresso: ${espresso.cost():.2f}")
+    print(f"Espresso + Milk: ${with_milk.cost():.2f}")
+    print(f"Espresso + Mocha: ${with_mocha.cost():.2f}")
 
-elif test_case == "file_extension_test":
-    # Test file extension handling
-    visualizer = LegacyChartGeneratorAdapter()
-    data = [1, 2, 3, 4]
-    visualizer.visualize(data)
+elif test_case == "decoration_order_test":
+    # Test that decoration order doesn't affect final result
+    decaf = Decaf()
     
-    # Test various filename formats
-    filenames = ["test", "test.jpg", "test.pdf", "test.png"]
-    for filename in filenames:
-        success = visualizer.export_visualization(filename)
-        print(f"Export '{filename}': {success}")
+    order1 = Milk(Mocha(decaf))
+    order2 = Mocha(Milk(decaf))
+    
+    print(f"Order 1 - {order1.get_description()}: ${order1.cost():.2f}")
+    print(f"Order 2 - {order2.get_description()}: ${order2.cost():.2f}")
+    print(f"Same cost: {order1.cost() == order2.cost()}")
 
-elif test_case == "summary_test":
-    # Test analysis summary
-    processor = LegacyDataAnalyzerAdapter()
-    visualizer = LegacyChartGeneratorAdapter()
-    system = AnalyticsSystem(processor, visualizer)
+elif test_case == "complex_order_test":
+    # Test complex beverage orders
+    orders = [
+        Mocha(Whip(Espresso())),
+        Soy(Milk(HouseBlend())),
+        Whip(Mocha(Soy(DarkRoast()))),
+        Milk(Decaf())
+    ]
     
-    data = [10, 20, 30, 40, 50, 60]
-    system.analyze_and_visualize(data)
-    summary = system.get_analysis_summary()
-    print("Analysis Summary:")
-    print(summary)
+    for i, order in enumerate(orders, 1):
+        print(f"Order {i}: {order.get_description()}")
+        print(f"Cost: ${order.cost():.2f}")
+        print("---")
 
-elif test_case == "mixed_data_test":
-    # Test with mixed numeric data
-    processor = LegacyDataAnalyzerAdapter()
-    data = [1.5, 2, 3.7, 4, 5.2]
-    processor.process_data(data)
-    results = processor.get_results()
-    print(f"Mixed data results: {results}")
+elif test_case == "double_condiment_test":
+    # Test adding the same condiment multiple times
+    espresso = Espresso()
+    double_mocha = Mocha(Mocha(espresso))
+    print(f"Description: {double_mocha.get_description()}")
+    print(f"Cost: ${double_mocha.cost():.2f}")
 
-elif test_case == "invalid_numeric_test":
-    # Test with invalid numeric data
-    processor = LegacyDataAnalyzerAdapter()
-    try:
-        processor.process_data([1, 2, "three", 4, 5])
-        print("Validation failed - should have raised ValueError")
-    except ValueError as e:
-        print(f"Invalid numeric data error: {e}")
+elif test_case == "beverage_comparison_test":
+    # Compare costs of different beverages with same condiments
+    base_beverages = [Espresso(), HouseBlend(), DarkRoast(), Decaf()]
+    
+    print("All beverages with Milk + Mocha:")
+    for beverage in base_beverages:
+        decorated = Milk(Mocha(beverage))
+        print(f"{decorated.get_description()}: ${decorated.cost():.2f}")
 
-elif test_case == "no_results_summary_test":
-    # Test summary with no results
-    processor = LegacyDataAnalyzerAdapter()
-    visualizer = LegacyChartGeneratorAdapter()
-    system = AnalyticsSystem(processor, visualizer)
+elif test_case == "condiment_cost_test":
+    # Test individual condiment costs
+    espresso = Espresso()
+    base_cost = espresso.cost()
     
-    summary = system.get_analysis_summary()
-    print(f"No results summary: {summary}")
+    condiments = [
+        ("Milk", Milk(espresso)),
+        ("Mocha", Mocha(espresso)),
+        ("Soy", Soy(espresso)),
+        ("Whip", Whip(espresso))
+    ]
+    
+    for name, decorated in condiments:
+        additional_cost = decorated.cost() - base_cost
+        print(f"{name} adds: ${additional_cost:.2f}")
 
-elif test_case == "large_dataset_test":
-    # Test with larger dataset
-    processor = LegacyDataAnalyzerAdapter()
-    data = list(range(1, 101))  # 1 to 100
-    processor.process_data(data)
-    results = processor.get_results()
-    print(f"Large dataset - Mean: {results.get('mean', 'N/A'):.2f}")
-    print(f"Large dataset - Min: {results.get('min', 'N/A')}")
-    print(f"Large dataset - Max: {results.get('max', 'N/A')}")
+elif test_case == "cheapest_most_expensive_test":
+    # Find cheapest and most expensive base beverages
+    beverages = [
+        ("Espresso", Espresso()),
+        ("House Blend", HouseBlend()),
+        ("Dark Roast", DarkRoast()),
+        ("Decaf", Decaf())
+    ]
+    
+    beverages.sort(key=lambda x: x[1].cost())
+    print(f"Cheapest: {beverages[0][0]} - ${beverages[0][1].cost():.2f}")
+    print(f"Most Expensive: {beverages[-1][0]} - ${beverages[-1][1].cost():.2f}")
 
-elif test_case == "complete_workflow_test":
-    # Test complete workflow with multiple operations
-    processor = LegacyDataAnalyzerAdapter()
-    bar_visualizer = LegacyChartGeneratorAdapter("bar")
-    line_visualizer = LegacyChartGeneratorAdapter("line")
+elif test_case == "nested_decoration_test":
+    # Test deeply nested decorations
+    beverage = HouseBlend()
+    # Add 5 layers of decorations
+    decorated = Whip(Soy(Mocha(Milk(Whip(beverage)))))
+    print(f"Description: {decorated.get_description()}")
+    print(f"Cost: ${decorated.cost():.2f}")
     
-    data = [12, 18, 25, 32, 28, 35, 42]
+    # Count number of condiments
+    description = decorated.get_description()
+    condiment_count = description.count(" + ")
+    print(f"Number of condiments: {condiment_count}")
+
+elif test_case == "cost_breakdown_test":
+    # Detailed cost breakdown
+    dark_roast = DarkRoast()
+    print(f"Base Dark Roast: ${dark_roast.cost():.2f}")
     
-    # Create analytics systems with different visualizers
-    bar_system = AnalyticsSystem(processor, bar_visualizer)
-    line_system = AnalyticsSystem(LegacyDataAnalyzerAdapter(), line_visualizer)
+    with_soy = Soy(dark_roast)
+    print(f"+ Soy: ${with_soy.cost():.2f}")
     
-    # Run analyses
-    bar_result = bar_system.analyze_and_visualize(data, "bar_chart.png")
-    line_result = line_system.analyze_and_visualize(data, "line_chart.png")
+    with_mocha = Mocha(with_soy)
+    print(f"+ Mocha: ${with_mocha.cost():.2f}")
     
-    print("Complete workflow test completed")
-    print(f"Bar chart result: {bar_result['visualization_file']}")
-    print(f"Line chart result: {line_result['visualization_file']}")
+    with_whip = Whip(with_mocha)
+    print(f"+ Whip: ${with_whip.cost():.2f}")
     
-    # Get summaries
-    print("Bar system summary:")
-    print(bar_system.get_analysis_summary())
-    print("Line system summary:")
-    print(line_system.get_analysis_summary())
+    final_cost = with_whip.cost()
+    print(f"Final total: ${final_cost:.2f}")
+
+elif test_case == "description_format_test":
+    # Test description formatting consistency
+    espresso = Espresso()
+    test_combinations = [
+        Milk(espresso),
+        Mocha(Milk(espresso)),
+        Whip(Mocha(Milk(espresso))),
+        Soy(Whip(Mocha(Milk(espresso))))
+    ]
+    
+    for combo in test_combinations:
+        description = combo.get_description()
+        print(f"Description: '{description}'")
+        # Check if description starts with base beverage name
+        starts_correctly = description.startswith("Espresso")
+        print(f"Starts with base name: {starts_correctly}")
+        print("---")
 

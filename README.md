@@ -3161,3 +3161,148 @@ print(adapter.print("Hello"))  # OLD: Hello
 **KEY POINT:** The adapter pattern makes incompatible interfaces work together, by wrapping an existing class with a new interface. The adapter translates calls from the expected interface into the actual interface of the wrapped object, this is useful for integrating legacy code or third-party libraries without modifying existing code.
 
 Complex example in practice.py lines 2210 - 2555.
+
+### Decorator Pattern:
+
+The decorator pattern adds new functionality to objects dynamically without changing their structure. It wraps objects to extend their behavior. Here is a simple coffee example:
+
+#### Simple Example:
+
+```python
+class Coffee:
+    def cost(self):
+        return 5
+
+    def description(self):
+        return "Simple coffee"
+```
+
+Create decorators that add new features into the `Coffee` class:
+
+```python
+# Both of these decorators will pass on the Coffee object for composition during initialization
+class MilkDecorator:
+    def __init__(self, coffee: object):
+        self.coffee = coffee # Creates another object inside the MilkDecorator class to be defined as an instance attribute
+
+    def cost(self):
+        return self.coffee.cost() + 2 # Calls directly from the Coffee class, mentioning the return value of 5 (originally from the Coffee class) and increments that value with 2
+
+    def description(self):
+        return self.coffee.description() + " + Milk" # String concatenation with the Coffee's description() method
+
+class SugarDecorator:
+    def __init__(self, coffee: object):
+        self.coffee = coffee
+
+    def cost(self):
+        return self.coffee.cost() + 1
+
+    def description(self):
+        return self.coffee.description() + " + Sugar"
+```
+
+Each decorator wraps its own object and adds its own functionality. The `milk_coffee` still has access to the original `cost()` and `description()` methods via delegation. Now we use these decorators to build customized coffee:
+
+```python
+# Start with basic coffee
+my_coffee = Coffee()
+print(f"{my_coffee.description()}: ${my_coffee.cost()}")
+
+# Add milk
+my_coffee = MilkDecorator(my_coffee)
+print(f"{my_coffee.description()}: ${my_coffee.cost()}")
+
+# Add sugar
+my_coffee = SugarDecorator(my_coffee)
+print(f"{my_coffee.description()}: ${my_coffee.cost()}")
+```
+
+Output:
+
+```
+Simple coffee: $5
+Simple coffee + Milk: $7
+Simple coffee + Milk + Sugar: $8
+```
+
+#### Example with Text Formatting:
+
+Here is another example with text formatting:
+
+```python
+class Text:
+    def __init__(self, content):
+        self.content = content
+
+    def render(self):
+        return self.content
+
+class BoldDecorator:
+    def __init__(self, text: object):
+        self.text = text
+
+    def render(self):
+        return f"<b>{self.text.render()}</b>"
+
+class ItalicDecorator:
+    def __init__(self, text: object):
+        self.text = text
+
+    def render(self):
+        return f"<i>{self.text.render()}</i>"
+
+# Build formatted text step by step
+message = Text("Hello World")
+message = BoldDecorator(message)
+message = ItalicDecorator(message)
+
+print(message.render())
+```
+
+Output:
+
+```
+<i><b>Hello World</b></i>
+```
+
+> [!NOTE]
+> When passing on the primary instance of the program to be assigned into/with the decorator class, the decorator **holds the reference** to the original object without overriding it (it operates with composition). It **delegates calls** to the original object for unchanged behavior, and the decorator will only **add or modify** the specific behavior, while all other functionality remains accessible (if the decorator forwards those calls).
+
+#### Key Characteristics:
+
+- **Dynamic Behavior Extension:** Adds new functionality to objects at runtime, without changing their original code;
+- **Uses Composition:** The decorator class wraps the original object and holds a reference to it, delegating unchanged behavior;
+- **Same Interface:** Decorators implement the same interface as the object they decorate, so they can be used interchangeable;
+- **Stackable:** Meaning that multiple decorators can be layered to combine behaviors flexibly;
+- **Open/Closed Principle:** Objects are open for extension (via decorators) but closed for modifications;
+- **Avoids Subclass Explosion:** No need to create many subclasses for every feature combination, just compose decorators as needed;
+- **Transparent to Client:** The client code interacts with the decorated object as if it were the original.
+
+##### How and Why is it Used?
+
+- **How:**
+
+  - You create a decorator class that takes an object and implements the same interface;
+  - The decorator forwards calls to the original object, adding extra behavior before or after.
+
+- **Why:**:
+  - To extend or modify object behavior at runtime;
+  - To follow the **Open/Closed Principle** (open for extensions, closed for modifications);
+  - To avoid subclass explosion (many subclasses for every feature combination).
+
+###### Can it use Inheritance?
+
+Sometimes inheritance is used for interface sharing, but **composition** is preferred for flexibility and dynamic extension.
+
+#### Real-World Examples:
+
+- Coffee Shop Example;
+- Text Formatting;
+- Logging or Authorization, where you would wrap a service object to add logging or permission checks before calling its methods.
+
+#### Summary:
+
+**KEY POINT:** The Decorator Pattern wraps objects to add new functionality and behavior without changing the original object, reminding that each decorator will store the reference to the wrapped object and adding new functionality. This allows you to combine multiple decorators for flexible feature combinations without creating many subclasses.
+
+Example in practice.py lines 2558 - 2943.
