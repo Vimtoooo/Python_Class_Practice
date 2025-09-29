@@ -3306,3 +3306,219 @@ Sometimes inheritance is used for interface sharing, but **composition** is pref
 **KEY POINT:** The Decorator Pattern wraps objects to add new functionality and behavior without changing the original object, reminding that each decorator will store the reference to the wrapped object and adding new functionality. This allows you to combine multiple decorators for flexible feature combinations without creating many subclasses.
 
 Example in practice.py lines 2558 - 2943.
+
+### Template Method Pattern:
+
+The Template Method Pattern defines the skeleton of an algorithm in a base class, letting subclasses override specific steps without changing the algorithm's structure.
+
+#### Simple Example:
+
+Here is a base class with a template method:
+
+```python
+class DataProcessor: # Main base class
+    def process(self): # Template method
+        """Template method defining the algorithm structure"""
+        self.read_data()
+        self.process_data() # This method will need to be implemented...
+        self.save_data()
+
+    def read_data(self):
+        print("Reading data...")
+
+    def process_data(self):
+        raise NotImplementedError("Subclasses must implement this")
+
+    def save_data(self):
+        print("Saving data...")
+```
+
+The template method `process()` defines the algorithm steps, while `process_date()` is left for subclasses to implement.
+Now we create concrete classes that implements the abstract method:
+
+```python
+# Child classes that implement their own versions of the process_data() method (overrides the parent's method)
+class CSVProcessor(DataProcessor):
+    def process_data(self):
+        print("Processing CSV data")
+
+class JSONProcessor(DataProcessor):
+    def process_data(self):
+        print("Processing JSON data")
+```
+
+> [!NOTE]
+> Note that each concrete class implements their own distinct code for that required step.
+
+Finally, we use the template method:
+
+```python
+csv_processor = CSVProcessor()
+csv_processor.process()
+
+print()  # Empty line
+
+json_processor = JSONProcessor()
+json_processor.process()
+```
+
+Output:
+
+```
+Reading data...
+Processing CSV data
+Saving data...
+
+Reading data...
+Processing JSON data
+Saving data...
+```
+
+#### Example with a Game Template:
+
+Let's create another example with a game template:
+
+```python
+class Game:
+    def play(self):
+        """Template method for playing a game"""
+        self.start_game()
+        self.play_game()
+        self.end_game()
+
+    def start_game(self):
+        print("Game started!")
+
+    def play_game(self):
+        raise NotImplementedError("Define the game rules")
+
+    def end_game(self):
+        print("Game ended!")
+
+class Chess(Game):
+    def play_game(self):
+        print("Playing chess - thinking strategically...")
+
+class Soccer(Game):
+    def play_game(self):
+        print("Playing soccer - running and kicking...")
+
+chess = Chess()
+chess.play()
+
+print() # Prints an empty line
+
+soccer = Soccer()
+soccer.play()
+```
+
+Output:
+
+```
+Game started!
+Playing chess - thinking strategically...
+Game ended!
+
+Game started!
+Playing soccer - running and kicking...
+Game ended!
+```
+
+#### Key Characteristics:
+
+- **Algorithm skeleton in base class;**
+- **Customizable steps via subclassing;**
+- **Promotes code reuse and consistency;**
+- \*\*Can use abstract base classes (`abc.ABC`);
+- **Enforces a fixed sequence of operation.**
+
+##### How and Why are Template Method Patterns Used?
+
+- **How:**
+
+  - You create a base class with a template method that calls several other method;
+  - Implement default behavior for some steps in the base class;
+  - Mark steps the must be customized (ofter with the `NotImplementedError` exception or `@abstractmethod` decorator);
+  - Subclasses override those steps to provide specific behavior.
+
+  Here is an example of a base report generator class with a template method:
+
+  ```python
+  # This is the base class with a template method
+  class ReportGenerator:
+      def generate(self):
+          self.fetch_data()
+          self.process_data()
+          self.format_report()
+          self.save_report()
+
+      def fetch_data(self):
+          print("Fetching data...")
+
+      def process_data(self):
+          raise NotImplementedError
+
+      def format_report(self):
+          print("Formatting report...")
+
+      def save_report(self):
+          print("Saving report...")
+
+  class SalesReport(ReportGenerator):
+      def process_data(self):
+          print("Processing sales data")
+  ```
+
+- **Why:**
+  - **Code Reuse:** Common algorithm structure is reused, only varying the steps that need customization;
+  - **Consistency:** Ensures all subclasses follow the same sequence of operations;
+  - **Flexibility:** Subclasses can change only the parts they need, without altering the overall flow;
+  - **Encapsulation:** Keeps the algorithm's structure in one place, making maintenance easier;
+  - **Enforces a Contract:** Subclasses must implement required steps, especially when using the `abc` module.
+
+###### Can it use the ABC Module?
+
+The answer is crystal clear, you can definitely utilize the `abc` module to make the base class abstract and enforce that subclasses implement required steps!
+
+Down below is an implemented example with the `DataProcessor` being inherited from the `abc` module:
+
+```python
+from abc import ABC, abstractmethod
+
+class DataProcessor(ABC):
+    def process(self):
+        self.read_data()
+        self.process_data()
+        self.save_data()
+
+    def read_data(self):
+        print("Reading data...")
+
+    @abstractmethod
+    def process_data(self):
+        pass
+
+    def save_data(self):
+        print("Saving data...")
+```
+
+#### Real-World Examples:
+
+- Data processing: Reading, processing and saving data (CBS, JSON, XML);
+- Games: Defining game flow (start, play, end) with different rules for each game;
+- Document generation: Steps for preparing formatting and exporting documents;
+- Web frameworks: Request handling pipeline with customizable hooks.
+
+#### Summary:
+
+|   **Aspect**    |       **Template Method Pattern**        |
+| :-------------: | :--------------------------------------: |
+|    Structure    |   Base class defines algorithm steps.    |
+|  Customization  |   Subclasses override specific steps.    |
+|   ABC support   |   Yes, for enforcing required method.    |
+| Real-world uses | Data processing, games, document export. |
+|   Key benefit   |  Consistency, code reuse, flexibility.   |
+
+**KEY POINT:** The Template Method Pattern defines a common algorithm structure in the parent class while letting subclasses customize specific steps. The parent class controls the overall flow, but the subclasses provide the specific implementations for specific methods that need implementation. This ensures consistent structure while allowing flexibility in individual steps.
+
+Example in practice.py in lines 2946 - 2998.
