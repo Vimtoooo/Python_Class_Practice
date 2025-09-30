@@ -2994,5 +2994,85 @@ class Clock(Timer):
         print("Time started!")
         t.sleep(t_len)
 
-my_clock: object = Clock("Digital Clock")
-my_clock.timer()
+# my_clock: object = Clock("Digital Clock")
+# my_clock.timer()
+
+
+# Implement the State Pattern!
+
+# State Classes
+class EString:
+
+    def play(self):
+
+        print("Playing the E string!")
+
+    
+    def next_string(self, string: object):
+            string.state = AString()
+    
+    def stop_string(self):
+        print("Stopped playing the E string.")
+
+class AString:
+    def play(self):
+        print("Playing the A string!")
+    
+    def next_string(self, string: object):
+        string.state = DString()
+    
+    def stop_string(self):
+        print("Stopped playing the A string.")
+
+class DString:
+    def play(self):
+        print("Playing the D string!")
+    
+    def next_string(self, string: object):
+        string.state = GString()
+    
+    def stop_string(self):
+        print("Stopped playing the D string.")
+
+class GString:
+    def play(self):
+        print("Playing the G string!")
+    
+    def next_string(self, string: object):
+        string.state = BString()
+    
+    def stop_string(self):
+        print("Stopped playing the G string.")
+
+class BString:
+    def play(self):
+        print("Playing the B string!")
+    
+    def next_string(self, string: object):
+        string.state = EString()
+    
+    def stop_string(self):
+        print("Stopped playing the B string.")
+
+# Context Class
+class Guitar:
+    def __init__(self):
+        self.state: object = EString()
+    
+    def next_string(self):
+        print("Altering to the next string!")
+        self.state.next_string(self)
+    
+    def play(self):
+        self.state.play()
+    
+    def stop_playing(self):
+        self.state.stop_string()
+
+# my_guitar = Guitar()
+# my_guitar.play()
+# my_guitar.next_string()
+# my_guitar.next_string()
+# my_guitar.play()
+# my_guitar.next_string()
+# my_guitar.stop_playing()

@@ -3522,3 +3522,207 @@ class DataProcessor(ABC):
 **KEY POINT:** The Template Method Pattern defines a common algorithm structure in the parent class while letting subclasses customize specific steps. The parent class controls the overall flow, but the subclasses provide the specific implementations for specific methods that need implementation. This ensures consistent structure while allowing flexibility in individual steps.
 
 Example in practice.py in lines 2946 - 2998.
+
+### State Pattern:
+
+The State Pattern allows an object to alter its behavior when its internal state changes, the object appears to change its class based on its current state.
+
+#### Simple Example:
+
+Here is a simple example with state classes for a traffic light:
+
+```python
+# Three state classes with similar methods and unique state changes
+class RedState:
+    def next_state(self, light):
+        print("Red -> Green")
+        light.state = GreenState()
+
+    def current_color(self):
+        return "Red"
+
+class GreenState:
+    def next_state(self, light):
+        print("Green -> Yellow")
+        light.state = YellowState()
+
+    def current_color(self):
+        return "Green"
+
+class YellowState:
+    def next_state(self, light):
+        print("Yellow -> Red")
+        light.state = RedState()
+
+    def current_color(self):
+        return "Yellow"
+```
+
+Each state defines what happens when transitioning to the next state.
+Let's create a context class that holds the current state:
+
+```python
+# This is the context class, where the object can transition into different states!
+class TrafficLight:
+    def __init__(self):
+        self.state = RedState()  # Start with red (utilizing composition for keeping track of these behaviors) while keeping its reference
+
+    def change(self):
+        self.state.next_state(self) # You pass 'self' twice to alter the primary instance into another class
+
+    def get_color(self):
+        return self.state.current_color()
+```
+
+Note that the `TrafficLight` class delegates to its current state object, now all we have to do is operate with the traffic lights!
+
+```python
+light = TrafficLight() # Primary instance
+print(f"Current: {light.get_color()}")
+
+light.change()  # Red -> Green (note that )
+print(f"Current: {light.get_color()}")
+
+light.change()  # Green -> Yellow
+print(f"Current: {light.get_color()}")
+
+light.change()  # Yellow -> Red
+print(f"Current: {light.get_color()}")
+```
+
+Output:
+
+```
+Current: Red
+Red -> Green
+Current: Green
+Green -> Yellow
+Current: Yellow
+Yellow -> Red
+Current: Red
+```
+
+#### Example with a Player:
+
+Here is another example with a simple player:
+
+```python
+# Two state classes
+class PlayingState:
+    def play(self, player):
+        print("Already playing")
+
+    def stop(self, player):
+        print("Stopping music")
+        player.state = StoppedState()
+
+class StoppedState:
+    def play(self, player):
+        print("Starting music")
+        player.state = PlayingState()
+
+    def stop(self, player):
+        print("Already stopped")
+
+# One Context class
+class MusicPlayer:
+    def __init__(self):
+        self.state = StoppedState()
+
+    def play(self):
+        self.state.play(self)
+
+    def stop(self):
+        self.state.stop(self)
+
+player = MusicPlayer()
+player.play()   # Starting music
+player.play()   # Already playing
+player.stop()   # Stopping music
+player.stop()   # Already stopped
+```
+
+Output:
+
+```
+Starting music
+Already playing
+Stopping music
+Already stopped
+```
+
+#### Key Characteristics:
+
+- **Encapsulates state-specific behavior** in separate classes;
+- **Context class** holds reference to the current state object;
+- **State transition** are handled by changing the state object in the context;
+- **Uses composition:** The context contains (wraps) state objects, not inherits from them;
+- **Promotes maintainability:** Easy to add new states or change behavior without modifying the context class.
+
+##### How and Why are State Patterns used?
+
+- **How:**
+
+  - You define **separate state classes** for each possible state, where each implements their own unique behavior;
+  - You create a **context class** (e.g. `TrafficLight`, `MusicPlayer`) that holds a reference to the current state object;
+  - The context delegates actions to its current state object;
+  - When an action triggers a state change, the state object updates the context's state to a new state object (the primary instance).
+
+  ```python
+  class RedState:
+      def next_state(self, light):
+          print("Red -> Green")
+          light.state = GreenState()
+
+  class TrafficLight:
+      def __init__(self):
+          # Holds an instance attribute (reference to the state class)
+          self.state = RedState()
+
+      def change(self):
+          self.state.next_state(self)
+
+  # Here we manipulate with these methods and changes!
+  light: object = TrafficLight() # TrafficLight starts in RedState
+  light.change() # Delegates to RedState.next_state() transitioning the context to GreenState
+  ```
+
+  > [!NOTE]
+  > The instance attribute 'self.state' is a reference to the instance from the 'RedState' class and we pass the primary instance and define a new behavior into the 'light.state = GreenState()' line. Note that the context class will handle with the `self.attribute_name` instance attribute and the State class handles with the `instance.attribute_name` instance attribute. The `attribute_name` must be **identical** to both inside the context and state classes for the behaviors to change!
+
+- **Why:**
+  - **Encapsulation:** Each state's behavior is kept in its own class, making code easier to manage and extend;
+  - **Flexibility:** You can add new states or change behaviors without modifying the context class;
+  - **Eliminates Complex Conditionals:** Instead of many 'if' / 'else' statements inside the context, each state handles its own transitions;
+  - **Dynamic Behavior:** The object's behavior changes at runtime depending on its current state.
+
+##### Logic Behind the State Pattern:
+
+- The context object doesn't need to know the details of each state's behavior;
+- Each state class knows how to handle its own behavior and when/how to transition to other states;
+- The context simply delegates actions to the current state, and the state decides what happens next.
+
+#### Why is `self` Passed Twice?
+
+Note that when calling a state object (e.g. `self.state.next_state(self)`), the first `self` is the context object, and the second `self` is passed to the state so it can update the context's state attribute, this allows the state object to modify the context (e.g. switch to a new state).
+
+#### Real-World Uses:
+
+- **Traffic lights:** Switching between red, yellow and green states;
+- **Media players:** Switching between playing, paused and stopped states;
+- **Order processing:** Changing order status (pending, shipped or delivered);
+- **Authentication:** Switching between logged- in and logged-out states.
+
+#### Summary:
+
+|    **Aspect**    | **State Pattern**                            |
+| :--------------: | -------------------------------------------- |
+|     Purpose      | Change behavior based on internal states.    |
+|    Mechanism     | Composition (context holds state object).    |
+| State transition | Swap state objects at runtime.               |
+| Real-world uses  | Traffic lights, media players, orders...     |
+|   Key benefit    | Flexibility, maintainability, extensibility. |
+
+**KEY POINT:** State pattern encapsulates state-specific behavior in separate classes and lets the context object delegate to the current state. When the state changes, the behavior changes automatically. This eliminates complex if/else statements and makes adding new states easier.
+
+Example in practice.py lines 3001 - 3078.
