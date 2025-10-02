@@ -3726,3 +3726,187 @@ Note that when calling a state object (e.g. `self.state.next_state(self)`), the 
 **KEY POINT:** State pattern encapsulates state-specific behavior in separate classes and lets the context object delegate to the current state. When the state changes, the behavior changes automatically. This eliminates complex if/else statements and makes adding new states easier.
 
 Example in practice.py lines 3001 - 3078.
+
+### Composite Pattern:
+
+The Composite Pattern treats individual objects and groups of objects uniformly, it create tree structures where both single items and collections of items share the same interface.
+
+#### Simple Example:
+
+Here are simple components for a file system:
+
+```python
+class File: # File class
+    def __init__(self, name, size):
+        self.name = name
+        self.size = size
+
+    def get_size(self):
+        return self.size
+
+    def display(self):
+        return f"File: {self.name} ({self.size}KB)"
+
+class Folder: # Folder class
+    def __init__(self, name):
+        self.name = name        # Name of the folder
+        self.children = []      # Stores all files within this folder object
+
+    def add(self, item):
+        self.children.append(item)
+
+    def get_size(self):
+        total = 0
+        for child in self.children:
+            total += child.get_size()
+        return total
+
+    # Method for building the tree structure
+    def display(self):  # If the instance stored inside the container is also part of the Folder class, that particular instance will go through this entire line of code as well!
+        result = f"Folder: {self.name}"
+        for child in self.children:
+            result += f"\n  {child.display()}" # Calls the display() method from either, the Folder class or the File class
+        return result
+```
+
+Both files and folders contain the exact same methods (`get_size()` and `display()`), so they can be treated uniformly.
+Build a file system structure:
+
+```python
+# Create files
+file1 = File("document.txt", 10)
+file2 = File("image.jpg", 50)
+file3 = File("video.mp4", 200)
+
+# Create folders
+documents = Folder("Documents")
+media = Folder("Media")
+root = Folder("Root")
+
+# Build the tree structure
+documents.add(file1)
+media.add(file2)
+media.add(file3)
+root.add(documents)
+root.add(media)
+```
+
+Then we use the composite structure:
+
+```python
+print(f"Root size: {root.get_size()}KB")
+print(root.display())
+```
+
+Output:
+
+```
+Root size: 260KB
+Folder: Root
+  Folder: Documents
+    File: document.txt (10KB)
+  Folder: Media
+    File: image.jpg (50KB)
+    File: video.mp4 (200KB)
+```
+
+#### Example with a Menu System:
+
+Create another example with a menu system:
+
+```python
+class MenuItem:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+    def get_price(self):
+        return self.price
+
+    def show(self):
+        return f"{self.name}: ${self.price}"
+
+class Menu:
+    def __init__(self, name):
+        self.name = name
+        self.items = []
+
+    def add(self, item):
+        self.items.append(item)
+
+    def get_price(self):
+        total = 0
+        for item in self.items:
+            total += item.get_price()
+        return total
+
+    def show(self):
+        result = f"{self.name} Menu:"
+        for item in self.items:
+            result += f"\n  {item.show()}"
+        return result
+
+combo = Menu("Combo")
+combo.add(MenuItem("Burger", 8))
+combo.add(MenuItem("Fries", 3))
+combo.add(MenuItem("Drink", 2))
+
+print(f"Combo price: ${combo.get_price()}")
+print(combo.show())
+```
+
+Output:
+
+```
+Combo price: $13
+Combo Menu:
+  Burger: $8
+  Fries: $3
+  Drink: $2
+```
+
+#### Key Concepts:
+
+- **Component:** The base interface or abstract class for all objects in the structure (leaf and composite);
+- **Leaf:** Represents individual objects (e.g., a file, a menu item) that do not have children;
+- **Composite:** Represents groups of objects (e.g. a folder, a menu) that can contain leaves or other composites;
+- **Uniformity:** Both leaf and composite objects implement the same interface, so client code can treat them the same way;
+- **Recursive Composition:** Composites can contain other composites, enabling deep, nested structures.
+
+##### Structure:
+
+```
+        Component
+         /      \
+      Leaf    Composite
+                 |
+        children (list of components)
+```
+
+#### Key Characteristics:
+
+- **Tree Structure:** Enables hierarchical organization;
+- **Uniform Interface:** Treats individual and composite objects the same;
+- **Recursive Operations:** Operations like `display()` or `get_size()` are recursive;
+- **Extensibility:** Easy to add now types of components;
+- **Loose Coupling:** Client code does not need to distinguish between leaf and composite.
+
+#### Real-World Examples:
+
+- **File Systems:** Folders contain files and other folders;
+- **Menu:** Menus contain menu items and submenus;
+- **Organization Charts:** Managers (composites) and employees (leaves);
+- **Graphics Editors:** Groups of shapes and individual shapes.
+
+#### Summary:
+
+| **Concept** | **Description** |
+| Component | Base interface for all objects. |
+| Leaf | Individual object, no children. |
+| Composite | Group of objects can contain leaves/composites. |
+| Uniformity | Same interface for all objects. |
+| Recursion | Composites operate recursively on children. |
+
+**KEY POINT:** The composite pattern lets you treat individual objects and collection of objects the same way, both leaves (individual items) and composites (groups) implement the same interface. This makes it easier to work with tree structures like file systems, menus or organizational charts.
+
+Complex example in practice.py lines 3081 - 3662.
