@@ -125,7 +125,7 @@ Private attributes are **underscores** that are **connected with the attrubute**
 
 #### Single underscores:
 
-```json
+```python
 class Person:
     def __init__(self, name, age):
         self._name = name       # "Protected" - internal use
@@ -134,7 +134,7 @@ class Person:
 
 Remember that single underscore attributes can still be accessed, but it's a signal not to.
 
-```json
+```python
 person = Person("Alice", 30)
 print(person._name)     # Works, but not recommended
 ```
@@ -143,7 +143,7 @@ print(person._name)     # Works, but not recommended
 
 Use double underscores for stronger privacy (name mangling):
 
-```json
+```python
 class Person:
     def __init__(self, name, age):
         self.__name = name   # "private" - gets name mangled
@@ -161,7 +161,7 @@ class Person:
 
 Use the accessor methods to interact with private attributes:
 
-```json
+```python
 person = Person("Bob", 25)
 print(person.get_name())  # Bob
 
@@ -171,7 +171,7 @@ person.set_age(-5)        # Age must be positive!
 
 Double underscore attributes get "name mangled" but can still be accessed:
 
-```json
+```python
 person = Person("Charlie", 35)
 # This doesn't work:
 # print(person.__name)  # AttributeError
@@ -188,7 +188,7 @@ Inheritance allows a class to inherit attributes and methods from another class,
 
 ### Basic Inheritance:
 
-```json
+```python
 class Animal:  # Here, we have the primary class called `Animal` (parent class), which includes a constructor and an info method...
     def __init__(self, name):
         self.name = name
@@ -199,7 +199,7 @@ class Animal:  # Here, we have the primary class called `Animal` (parent class),
 
 Then, we create another class called `Dog` that inherits from the previous class, becoming the child class (`Animal`, which will represent the **parent** class):
 
-```json
+```python
 class Dog(Animal):
     pass  # Inherits everything from Animal
 ```
@@ -207,7 +207,7 @@ class Dog(Animal):
 The syntax `class Dog(Animal):` means that `Dog` inherits from `Animal`, and always put the parent class inside the parentheses!
 Next, we create instances from both classes and wield with the inherited methods:
 
-```json
+```python
 generic_animal = Animal("Creature")
 buddy = Dog("Buddy")
 
@@ -217,7 +217,7 @@ buddy.info() # -> I am Buddy, an animal
 
 Even though `Dog` doesn't define a constructor method `__init__` or `info`, it automatically gets them from the `Animal` class. We can even add more methods into the child class `Dog`:
 
-```json
+```python
 class Dog(Animal):
     def bark(self):
         print(f"{self.name} says Woof!")
@@ -237,7 +237,7 @@ buddy.bark()  # New method
 
 The `super()` function allows a child class to call methods from its parent class, which lets you extend parent functionality rather than completely replacing it. Here are the following examples:
 
-```json
+```python
 class Animal:
     def __init__(self, name): # We will call the super() function and link it to the parent's constructor method to extend its current code functionality!
         self.name = name
@@ -261,7 +261,7 @@ Name: Buddy, Breed: Golden Retriever
 
 Utilize `super()` to avail oneself of the parent methods for further extension!
 
-```json
+```python
 class Animal:
     def make_sound(self):
         print("Generic animal sound")
@@ -283,7 +283,7 @@ Woof!
 
 Without the `super()` function, you would **loose the parent's functionality**, only calling methods which would be **located locally inside the child class**, but simultaneously still having access to nearly all of the parent class methods (only if the parent's method does not have an **identical name** to the child's method!).
 
-```json
+```python
 class Cat(Animal):
     def make_sound(self):
         print("Meow!")  # Only cat sound, parent method ignored
@@ -302,7 +302,7 @@ Meow!
 Method overriding allows the a child class to provide its own implementation of a method that already exists in the parent class. Here is an example of a parent class with methods and a child class that encompasses one method that pursues the exact method name as the parent's method:
 (Examples in my_class.py file between lines 224 - 246 and in Main.py 113 - 117)
 
-```json
+```python
 class Animal:
     def __init__(self, name):
         self.name = name
@@ -321,7 +321,7 @@ class Dog(Animal):
 
 The `make_sound` methods in `Dog` replaces the one from `Animal`, but `info` is still inherited unchanged. Now, we'll create instances and test the methods:
 
-```json
+```python
 animal = Animal("Generic Animal")
 dog = Dog("Buddy")
 
@@ -342,7 +342,7 @@ I am Buddy
 
 You can override **any inherited method**, depending on how you would like your program to function and what to stimulate.
 
-```json
+```python
 class Cat(Animal):
     def make_sound(self):
         print("Meow!")
@@ -366,7 +366,7 @@ I am Whiskers, a sneaky cat
 Multiple inheritance allows a class to inherit from more than one parent class simultaneously, combining functionality from different sources. (More at my_class.py lines 249 - 269 and appliance in Main.py lines 119 - 124)
 Below are the examples:
 
-```json
+```python
 class Animal:
     def __init__(self, name):
         self.name = name
@@ -390,7 +390,7 @@ class Bird(Animal, Flyable):
 
 The syntax `class Bird(Animal, Flyable):` means that the `bird` class (child class) inherits from both `Animal` and `Flyable` classes (both becoming parent classes). Let us make some experiments!
 
-```json
+```python
 sparrow = Bird("Sparrow", "House sparrow")
 print(sparrow.eat())
 print(sparrow.fly())
@@ -417,7 +417,7 @@ The `__mro__` or the `mro()` method and function check whether which parent gets
 
 Method Resolution Order (MRO) is a sequence that Python operates to look for methods when multiple classes have the exact same method name, here is an example of multiple classes having the same method name:
 
-```json
+```python
 class A:
     def method(self):
         return "Method from A"
@@ -438,7 +438,7 @@ print(C.__mro__)
 
 This shows Python will check `C` first, then `A`, then `B`, then the built-in object class.
 
-```json
+```python
 # Create an object then call the method
 c = C()
 print(c.method())
@@ -449,7 +449,7 @@ Method from A
 
 Python found the method in class `A` first, so it made use of it. Now, let's change the inheritance order to see the difference:
 
-```json
+```python
 class D(B, A):  # B comes before A now
     pass
 
@@ -476,7 +476,7 @@ Polymorphism means "many forms" and allows objects of different classes to respo
 
 Here is a parent class with a method, where all of the child classes will also contain their own knock-off versions of the same method name:
 
-```json
+```python
 # Parent class
 class Animal:
     def speak(self):
@@ -498,7 +498,7 @@ class Cow(Animal):
 
 Each class provides its own implementation of the method `speak()`, let's create a list of different animals!
 
-```json
+```python
 animals = [Dog(), Cat(), Cow(), Animal()]
 
 # Call the same method on ALL OBJECTS
@@ -514,7 +514,7 @@ Animal makes a sound#
 
 This is essentially **polymorphism in action** - the same method call behaves differently in based on the object's actual type, you can also utilize polymorphism with functions:
 
-```json
+```python
 def make_animal_speak(animal):
     print(animal.speak())
 
@@ -535,7 +535,7 @@ More examples of polymorphism in lines 272 - 285 in my_class.py and usage in lin
 
 Duck typing focuses on what an object can do, not what it is. If an object has the methods you need, you can use it - regardless of its class type. Here are two unrelated classes with the same methods:
 
-```json
+```python
 class Duck:
     def swim(self):
         return "Duck swimming"
@@ -553,7 +553,7 @@ class Person:
 
 Notice that `Person` and `Duck` don't inherit from the same parent class, but they both have `swim()` and `quack()` methods. Let's create a function that works with any "duck-like" object:
 
-```json
+```python
 def make_it_swim_and_quack(duck_like_object):
     print(duck_like_object.swim())
     print(duck_like_object.quack())
@@ -572,7 +572,7 @@ Person imitating a duck: Quack!
 
 We can also add another "duck-like" class in the mix:
 
-```json
+```python
 class Robot:
     def swim(self):
         return "Robot swimming with propellers"
@@ -596,7 +596,7 @@ See more examples of Duck Typing in lines 298 - 314 in my_class.py and usage in 
 
 Abstract classes are classes that cannot be instantiated directly and contain abstract methods that must be implemented by subclasses. Python provides the `abc` module for abstract base classes, **import the `abc` module to create abstract classes and utilize the `@abstractmethod` decorator**:
 
-```json
+```python
 from abc import ABC, abstractmethod
 
 # Then create an abstract class with abstract methods
@@ -615,14 +615,14 @@ class Shape(ABC):
 
 The `@abstractmethod` decorator **marks methods that must be implemented by subclasses**, regular methods like `describe()` can have implementations. However, if you try to create an instance of the abstract class, Python will not allow this type of action to happen.
 
-```json
+```python
 # This will cause an error:
 shape = Shape()  # TypeError: Can't instantiate abstract class
 ```
 
 Let's create a concrete subclass (child class) that implements all of the abstract methods from `Shape`:
 
-```json
+```python
 class Circle(Shape):
     def __init__(self, radius):
         self.radius = radius
@@ -647,7 +647,7 @@ This is a shape
 
 We can create another concrete subclass by operating with the same abstract class:
 
-```json
+```python
 class Rectangle(Shape):
     def __init__(self, width, height):
         self.width = width
@@ -678,7 +678,7 @@ More examples of Abstract methods and classes in my_class.py lines 16 - 348 and 
 
 An interface defines a contract that classes must follow. In Python, we create interfaces using abstract base classes where all methods are abstract. Follow down below for an example:
 
-```json
+```python
 # Import the abc module
 from abc import ABC, abstractmethod
 
@@ -697,7 +697,7 @@ In interface design, all methods in an interface should be abstract - they defin
 
 Now, let's implement the interface in a concrete class (the subclass which will pursue implementation to be overridden from the abstract class Drawable):
 
-```json
+```python
 class Circle(Drawable): # Inherits from the abstract class Drawable (all abstract methods inside that class must be implemented in a correct manner into the concrete class)...
     def __init__(self, radius):
         self.radius = radius
@@ -739,7 +739,7 @@ Resized rectangle to 10x8
 
 You can also use interfaces as type hints (for type hinting a particular class, mention it exactly like it after the colon, ex: def Runner(p: Player) the parameter can be named any way, but the type hint is more strict):
 
-```json
+```python
 def render_shape(drawable: Drawable):
     return drawable.draw()
 
@@ -764,7 +764,7 @@ Python has three types of access controls for class members, where these control
 
 - **Public:** - Can be accessed from anywhere (inside or outside the class), where methods and attributes can be used freely, syntax of an underscore prefix. For example: `self.name`.
 
-```json
+```python
 class Person:
     def __init__(self, name):
         self.name = name  # public
@@ -775,7 +775,7 @@ print(p.name)  # Accessible
 
 - **Protected:** - Should be accessed only within the class and its subclasses (not enforced, just a convention), which indicates for "internal use" of "protected" data, not part of the public API, syntax of a single underscore prefix. For example: `self._age`.
 
-```json
+```python
 class Person:
     def __init__(self, name, age):
         self._age = age  # protected
@@ -791,7 +791,7 @@ print(s.get_age()) # Recommended way to obtain protected attributes through a cl
 
 - **Private:** - Gets the "name-mangled" to prevent direct access from outside the class (which the syntax of `_ClassName__attribute`), which pursues a stronger privacy for methods and attributes that should not be accessed outside the class, syntax of double underscore prefix. For example: `self.__salary`.
 
-```json
+```python
 class Person:
     def __init__(self, salary):
         self.__salary = salary  # private
@@ -807,7 +807,7 @@ print(p.get_salary()) # Also returns the private attribute in a simpler manner t
 
 Now, here is an example of a class with all three access levels:
 
-```json
+```python
 class BankAccount:
     def __init__(self, owner, balance, account_id):
         self.owner = owner           # Public - accessible anywhere
@@ -848,7 +848,7 @@ print(account._BankAccount__account_id)  # 12345
 If you want to access protected or private attributes, always define a method that returns that attribute in the correct syntax!
 Create a subclass to show protected vs private access:
 
-```json
+```python
 class SavingsAccount(BankAccount):
     def show_balance(self):
         return self._balance        # Protected - accessible in subclass
@@ -898,7 +898,7 @@ Access modifiers control the visibility of class attributes and methods. Python 
 
 #### Public Access (no prefix):
 
-```json
+```python
 class Person:
     def __init__(self):
         self.name = "Coddy"      # Public attribute
@@ -914,7 +914,7 @@ print(person.greet())        # Hello, I'm Coddy
 
 #### Protected Access (single underscore):
 
-```json
+```python
 class Employee:
     def __init__(self):
         self._salary = 50000     # Protected attribute
@@ -933,7 +933,7 @@ print(employee.show_bonus()) # 5000.0 - proper way (for internal use within the 
 
 #### Private Access (double underscore):
 
-```json
+```python
 class User:
     def __init__(self):
         self.__password = "secure123"   # Private attribute
@@ -970,7 +970,7 @@ These help establish clear boundaries and prevent accidental misuse of class int
 
 Information hiding restricts direct access to object components, requiring all interactions to occur through well-defined interfaces. This protects internal data from unauthorized access. We will illustrate a class with different levels of information hiding:
 
-```json
+```python
 class BankAccount:
     def __init__(self, owner, initial_balance):
         self.owner = owner                    # Public - can be accessed directly
@@ -1031,7 +1031,7 @@ ACC123456
 
 Advanced property decorators provide more sophisticated control over attribute access, including computed properties, deleters and full property management. Here is an example of computed properties that derive values from other attributes:
 
-```json
+```python
 class Rectangle:
     def __init__(self, width, height):
         self.width = width
@@ -1054,7 +1054,7 @@ print(rect.perimeter) # 16 - calculated automatically
 
 Now, let's create a a class with methods that contains the `@property` decorators with the getter, setter and deleter!
 
-```json
+```python
 class Temperature:
     def __init__(self):
         self._temp = 0 # Protected attribute
@@ -1090,7 +1090,7 @@ print(temp.temperature)  # 0
 
 Create a more complex example with a game score
 
-```json
+```python
 class Player:
     def __init__(self, name):
         self.name = name # Public attribute
@@ -1149,7 +1149,7 @@ More examples in practice.py lines 629 - 675.
 
 Magic methods (also called dunder methods) are special methods with double underscores from both sides, Python calls them automatically in response to certain operations. Here is an example of a class with a magic method:
 
-```json
+```python
 class Book:
     def __init__(self, title, author, pages):
         self.title = title
@@ -1162,7 +1162,7 @@ class Book:
 
 The `__init__` method is called automatically when initializing instances and the `__str__` method is called when you convert the object into a string:
 
-```json
+```python
 my_book = Book("Python Programming", "John Smith", 350) # Creating an instance
 
 print(my_book)        # Calls __str__ automatically
@@ -1175,7 +1175,7 @@ Python Programming by John Smith
 
 **NOTE:** Without `__str__`, printing would show the object's memory location.
 
-```json
+```python
 class SimpleBook:
     def __init__(self, title):
         self.title = title
@@ -1186,7 +1186,7 @@ print(simple)  # <__main__.SimpleBook object at 0x...>
 
 We can also add another magic method for length!
 
-```json
+```python
 class Book:
     def __init__(self, title, author, pages):
         self.title = title
@@ -1214,7 +1214,7 @@ More examples in my_class.py lines 454 - 467 and usage in Main.py lines 181 - 18
 
 Operator overloading allows your classes to work with Python's built-in operators (+, -, \*, /, etc) by implementing special dunder methods. Here is an example of a class with operator overloading:
 
-```json
+```python
 class Vector:
     def __init__(self, x, y): # Constructor dunder method
         self.x = x
@@ -1247,7 +1247,7 @@ Vector(15, 18)
 
 We can also add comparison operators!
 
-```json
+```python
 class Vector:
     def __init__(self, x, y):
         self.x = x
@@ -1284,7 +1284,7 @@ Examples in practice.py lines 678 - 705.
 
 Container magic methods allow your classes to behave like built-in containers (for examples, lists, sets, dictionaries and etc). They enable indexing, length checking and iteration in your custom objects. Here is an example of a class with container magic methods:
 
-```json
+```python
 class CustomList:
     def __init__(self, items):
         self.items = items
@@ -1315,7 +1315,7 @@ Let's dive deep into the meaning and purpose of these dunder container methods!
 |      `__iter__`      | Iterate through a container        | Allows iteration for a container to retrieve multiple values (using a loop).   |
 |    `__contains__`    | Verify the existence of an element | To make the `in` operation work for element checking (membership testing).     |
 
-```json
+```python
 # Using the __len__ method
 my_list = CustomList([1, 2, 3, 4])
 print(len(my_list))  # 4
@@ -1361,7 +1361,7 @@ Object-oriented programming offers two main approaches for code reuse: Inheritan
 
 #### Inheritance: "is-a" relationship
 
-```json
+```python
 class Animal:
     def __init__(self, name):
         self.name = name
@@ -1382,7 +1382,7 @@ Now, here is an example of composition creating "has-a" relationship:
 
 #### Composition: "is-a" relationship
 
-```json
+```python
 class Engine:
     def start(self):
         return "Engine started"
@@ -1403,7 +1403,7 @@ print(car.start())  # Uses composed engine
 
 Let's compare both approaches with a slight more complex example:
 
-```json
+```python
 # Inheritance approach
 class Bird:
     def move(self):
@@ -1439,7 +1439,7 @@ class Duck:
 
 Test both approaches:
 
-```json
+```python
 # Inheritance
 duck1 = Duck()       # The Duck "is-a" Bird!
 print(duck1.move())  # Flying
@@ -1454,7 +1454,7 @@ print(duck2.quack()) # Quack!
 
 Output:
 
-```json
+```python
 Buddy is eating
 Woof!
 Engine started
@@ -1505,34 +1505,34 @@ Examples of usage in practice.py lines 923 - 1118.
 
 Mixins are a special kind of inheritance used to "mix in" **additional functionality** to classes through **multiple inheritance**. They provide specific methods without being complete classes themselves. Here is an example of a simple mixin:
 
-```json
-class JSONSerializableMixin:
-    def to_json(self):
-        import json
-        return json.dumps(self.__dict__)
+```python
+class pythonSerializableMixin:
+    def to_python(self):
+        import python
+        return python.dumps(self.__dict__)
 
-class User(JSONSerializableMixin):
+class User(pythonSerializableMixin):
     def __init__(self, name, email):
         self.name = name
         self.email = email
 ```
 
-The mixin add JSON functionality to any class that inherits from it.
+The mixin add python functionality to any class that inherits from it.
 
-```json
+```python
 user = User("Alice", "alice@example.com")
-print(user.to_json())
+print(user.to_python())
 ```
 
 Output:
 
-```json
+```python
 { "name": "Alice", "email": "alice@example.com" }
 ```
 
 You can create multiple mixins with distinct functionalities:
 
-```json
+```python
 class PrintableMixin:
     def pretty_print(self):
         for key, value in self.__dict__.items():
@@ -1545,8 +1545,8 @@ class ComparableMixin:
 
 Then combine multiple mixins in one class:
 
-```json
-class Product(JSONSerializableMixin, PrintableMixin, ComparableMixin):
+```python
+class Product(pythonSerializableMixin, PrintableMixin, ComparableMixin):
     def __init__(self, name, price):
         self.name = name
         self.price = price
@@ -1557,15 +1557,15 @@ product2 = Product("Laptop", 999)
 
 Use all mixin functionalities:
 
-```json
-print(product1.to_json())        # From JSONSerializableMixin
+```python
+print(product1.to_python())        # From pythonSerializableMixin
 product1.pretty_print()          # From PrintableMixin
 print(product1 == product2)      # From ComparableMixin
 ```
 
 Output:
 
-```json
+```python
 {"name": "Laptop", "price": 999}
 name: Laptop
 price: 999
@@ -1614,7 +1614,7 @@ Besides regular instance methods, classes can have static methods and class meth
 
 #### @staticmethod:
 
-```json
+```python
 class MathHelper:
     @staticmethod
     def add(a, b):
@@ -1627,7 +1627,7 @@ class MathHelper:
 
 Static methods don't need neither the `self` or the `cls` parameter since they work like regular functions. You can call them directly from the class:
 
-```json
+```python
 result = MathHelper.add(5, 3)
 print(result) # 8
 
@@ -1639,7 +1639,7 @@ Now, here is an example of a class method:
 
 #### @classmethod:
 
-```json
+```python
 class Person:
     count = 0  # Class variable / class attribute
 
@@ -1658,7 +1658,7 @@ class Person:
 
 The class methods can take both instances or classes for accessing the class methods with `cls` as the first parameter.
 
-```json
+```python
 person1 = Person("Alice")
 person2 = Person("Bob")
 print(Person.get_count())  # 2
@@ -1666,7 +1666,7 @@ print(Person.get_count())  # 2
 
 Use class methods all alternative constructors!
 
-```json
+```python
 anonymous = Person.create_anonymous()
 print(anonymous.name)      # Anonymous
 print(Person.get_count())  # 3
@@ -1674,7 +1674,7 @@ print(Person.get_count())  # 3
 
 Compare **all three method types** in **one class:**
 
-```json
+```python
 class Calculator:
     brand = "Python Calc" # Class attribute
 
@@ -1703,7 +1703,7 @@ print(Calculator.multiply(4, 5)) # 20
 
 Overall output:
 
-```json
+```python
 8
 True
 2
@@ -1716,7 +1716,7 @@ Python Calc
 
 You can call class and static methods with instances too!
 
-```json
+```python
 calc = Calculator("Bob")
 print(calc.get_brand())      # Python Calc (class method)
 print(calc.multiply(2, 3))   # 6 (static method)
@@ -1740,7 +1740,7 @@ Class decorators allows you to **modify and enhance class by wrapping them with 
 
 Here is a simple class with no decorators:
 
-```json
+```python
 class Person:
     def __init__(self, name):
         self.name = name
@@ -1753,7 +1753,7 @@ class Person:
 
 We create a new class decorator that adds a new method:
 
-```json
+```python
 def add_farewell(cls):
     def farewell(self):
         return f"Goodbye from {self.name}"
@@ -1764,7 +1764,7 @@ def add_farewell(cls):
 
 Then apply the decorator to the class using the '@' at-sign:
 
-```json
+```python
 @add_farewell
 class EnhancedPerson:
     def __init__(self, name):
@@ -1776,7 +1776,7 @@ class EnhancedPerson:
 
 Now, the `EnhancedPerson` class has its original method and an added method:
 
-```json
+```python
 person = EnhancedPerson("Alice")
 print(person.greet())     # Hello, my name is Alice
 print(person.farewell())  # Goodbye from Alice
@@ -1791,7 +1791,7 @@ print(person.farewell())  # Goodbye from Alice
 
 ##### Example of a Class Decorator in use:
 
-```json
+```python
 def add_repr(cls):              # Outer function takes the class as an argument
     def __repr__(self):         # New method to add
         return f"{cls.__name__}({self.__dict__})"
@@ -1835,7 +1835,7 @@ Context managers allow you to **allocate and release resources precisely** when 
 
 #### Most Common Use Example:
 
-```json
+```python
 with open('example.txt', 'w') as file:
     file.write('Hello, world!')
 # File is automatically closed here
@@ -1846,7 +1846,7 @@ We can implement our own context manager using the dunder methods `__enter__` an
 
 #### With the `__enter__` and `__exit__` Magic Methods:
 
-```json
+```python
 class MyContext:
     def __enter__(self):
         print("Entering the context")
@@ -1861,14 +1861,14 @@ class MyContext:
 
 Then, you could use your custom context manager:
 
-```json
+```python
 with MyContext() as ctx:
     print("Inside the context")
 ```
 
 Output:
 
-```json
+```python
 Entering the context
 Inside the context
 Exiting the context
@@ -1878,7 +1878,7 @@ Exiting the context
 
 Create a more practical context manager for database connections!
 
-```json
+```python
 class DatabaseConnection:
     def __init__(self, db_name):
         self.db_name = db_name
@@ -1902,7 +1902,7 @@ with DatabaseConnection("users_db") as conn:
 
 And we will have to handle exceptions in context managers:
 
-```json
+```python
 class SafeContext:
     def __enter__(self):
         print("Setting up resources")
@@ -1921,7 +1921,7 @@ with SafeContext():
 
 Outputs:
 
-```json
+```python
 Connecting to users_db
 Using Connection to users_db
 Performing database operations...
@@ -1969,7 +1969,7 @@ The `*args` parameter allows a method to accept any number of positional argumen
 
 #### Basic Usage of the `*args` parameter:
 
-```json
+```python
 class Calculator:
     def add_numbers(self, *args):
         return sum(args)
@@ -1981,7 +1981,7 @@ class Calculator:
 
 We can call the methods with different numbers of arguments:
 
-```json
+```python
 calc = Calculator()
 result1 = calc.add_numbers(1, 2, 3)
 result2 = calc.add_numbers(10, 20, 30, 40, 50)
@@ -1991,13 +1991,13 @@ print(result2)  # 150
 
 The `*args` collects all arguments into a tuple:
 
-```json
+```python
 calc.show_numbers(5, 10, 15, 20)
 ```
 
 Output:
 
-```json
+```python
 6
 150
 Number 1: 5
@@ -2012,7 +2012,7 @@ Note that the `*args` parameter can have any naming convention of your choice, b
 
 You can combine regular parameters with the `*args`:
 
-```json
+```python
 class Logger:
     def log_message(self, level, *messages):
         print(f"[{level}]", end=" ")
@@ -2027,14 +2027,14 @@ logger.log_message("ERROR", "Connection", "failed")
 
 Output:
 
-```json
+```python
 [INFO] User logged in
 [ERROR] Connection failed
 ```
 
 #### Applying the `*args` in Constructor Methods:
 
-```json
+```python
 class Team:
     def __init__(self, team_name, *players):
         self.team_name = team_name
@@ -2051,7 +2051,7 @@ team.show_team()
 
 Output:
 
-```json
+```python
 Team: Warriors
 - Alice
 - Bob
@@ -2063,7 +2063,7 @@ Team: Warriors
 
 You can also unpack arguments when calling methods:
 
-```json
+```python
 numbers = [1, 2, 3, 4, 5]
 result = calc.add_numbers(*numbers)  # Unpacks the list (the numbers have been removed from the list!)
 print(result)  # 15
@@ -2083,7 +2083,7 @@ Check the example in practice.py in lines 1592 - 1620.
 
 #### Simple Example:
 
-```json
+```python
 def greet(**kwargs):
     print(kwargs)
 
@@ -2092,7 +2092,7 @@ greet(name="Alice", age=25, country="Australia")
 
 Output:
 
-```json
+```python
 { "name": "Alice", "age": 25, "country": "Australia" }
 ```
 
@@ -2102,7 +2102,7 @@ As you can see, the `**kwargs` automatically takes all of the keyword arguments 
 
 Since the `**kwargs` generates a clean dictionary, you can most certainly loop through it, depending on what iterables you would like to obtain from:
 
-```json
+```python
 def print_info(**kwargs):
     print("Information received:")
     for key, value in kwargs.items():
@@ -2113,7 +2113,7 @@ print_info(name="Bob", age=30, job="Teacher")
 
 Output:
 
-```json
+```python
 Information received:
 name: Bob
 age: 30
@@ -2124,7 +2124,7 @@ job: Teacher
 
 You can also combine regular parameters with the `**kwargs` just like the `*args` parameter!
 
-```json
+```python
 def create_profile(name, **details): # The kwargs parameter can also have different naming conventions!
     print(f"Creating profile for: {name}")
     print("Additional details:")
@@ -2136,7 +2136,7 @@ create_profile("Sarah", age=28, city="London", hobby="Reading")
 
 Output:
 
-```json
+```python
 Creating profile for: Sarah
 Additional details:
   age: 28
@@ -2148,7 +2148,7 @@ Additional details:
 
 If no **keyword arguments are passed**, the `kwargs` parameter will be instantiated as an **empty dictionary**. For example:
 
-```json
+```python
 def show_data(**kwargs):
     if kwargs:
         print("Data:", kwargs)
@@ -2161,7 +2161,7 @@ show_data(item="apple")  # With arguments
 
 Output:
 
-```json
+```python
 No data provided
 Data: {'item': 'apple'}
 ```
@@ -2170,7 +2170,7 @@ Data: {'item': 'apple'}
 
 Here, you will see why you would use the `**kwargs` parameter in a class:
 
-```json
+```python
 class Person:
     def __init__(self, name, **kwargs):
         self.name = name
@@ -2187,7 +2187,7 @@ person.show_info()
 
 Output:
 
-```json
+```python
 Name: Alice
 age: 25
 city: New York
@@ -2198,7 +2198,7 @@ job: Engineer
 
 You can also unpack dictionaries when calling functions!
 
-```json
+```python
 def display_settings(**kwargs):
     for setting, value in kwargs.items():
         print(f"{setting} = {value}")
@@ -2209,7 +2209,7 @@ display_settings(**settings)  # Unpacks the dictionary (removes all key-value pa
 
 Output:
 
-```json
+```python
 debug = True
 verbose = False
 timeout = 30
@@ -2232,7 +2232,7 @@ Design Patterns are reusable solutions to common problems in software design, th
 
 #### Without Design Patterns:
 
-```json
+```python
 # Without pattern - messy approach
 class DatabaseConnection:
     def __init__(self):
@@ -2247,7 +2247,7 @@ db2 = DatabaseConnection()  # Wasteful - creates another connection
 
 With a design pattern, you get a better solution!
 
-```json
+```python
 # With Singleton pattern - controlled approach
 class DatabaseConnection:
     _instance = None
@@ -2325,7 +2325,7 @@ Each pattern have their pros and cons, so it is key to note that each pattern wi
 
 The **Singleton Pattern** ensures that a **class has only one instance and it provides a global point of access to it**. This is useful for resources like database connections or configuration settings. Here is the simple singleton pattern which you already have seen in the introduction of this topic:
 
-```json
+```python
 class Singleton:
     _instance = None
 
@@ -2339,14 +2339,14 @@ The `__new__` dunder method controls new object creations, where is has a specif
 
 Here we create two instances of the Singleton class:
 
-```json
+```python
 singleton1 = Singleton()
 singleton2 = Singleton()
 ```
 
 Then check of both variables reference the same object:
 
-```json
+```python
 print(singleton1 is singleton2)  # True
 print(id(singleton1))            # Same memory address
 print(id(singleton2))            # Same memory address
@@ -2356,7 +2356,7 @@ print(id(singleton2))            # Same memory address
 
 Let's see a more practical example of a Singleton pattern which involves a database connection:
 
-```json
+```python
 class DatabaseConnection:
     _instance = None
 
@@ -2384,7 +2384,7 @@ print(db1 is db2)
 
 Next, create a configuration manager using the Singleton Design:
 
-```json
+```python
 class Config:
     _instance = None
 
@@ -2409,7 +2409,7 @@ print(config2.get_setting("debug"))  # True - same settings
 
 Output:
 
-```json
+```python
 True
 140234567890123
 140234567890123
@@ -2434,7 +2434,7 @@ Pay close attention to the code below!
 
 #### Example of a Factory Pattern:
 
-```json
+```python
 class Car: # Both of these classes are vehicles but are distinct from each other (depending on the vehicle type)
     def __init__(self, brand): # __init__ and info methods for both classes
         self.brand = brand
@@ -2454,7 +2454,7 @@ class Bike:
 
 We create a factory class to produce these objects more precisely:
 
-```json
+```python
 class VehicleFactory:
     def create_vehicle(self, vehicle_type, brand):
         if vehicle_type == "car":
@@ -2467,7 +2467,7 @@ class VehicleFactory:
 
 Then utilize the factory class instead of calling constructors directly:
 
-```json
+```python
 factory = VehicleFactory()
 my_car = factory.create_vehicle("car", "Toyota")
 my_bike = factory.create_vehicle("bike", "Honda")
@@ -2480,7 +2480,7 @@ print(my_bike.info())  # Bike: Honda
 
 You can use the `*args` parameter to make your factory class more flexible:
 
-```json
+```python
 class FlexibleFactory:
     def create_vehicle(self, vehicle_type, *args):
         if vehicle_type == "car":
@@ -2502,7 +2502,7 @@ class Truck:
 
 Finally, use the flexible factory:
 
-```json
+```python
 flexible = FlexibleFactory()
 car = flexible.create_vehicle("car", "Ford")
 truck = flexible.create_vehicle("truck", "Volvo", "20")
@@ -2513,7 +2513,7 @@ print(truck.info())  # Truck: Volvo (20t)
 
 Output:
 
-```json
+```python
 Car: Toyota
 Bike: Honda
 Car: Ford
@@ -2536,7 +2536,7 @@ The observer pattern creates a **one-to-may relationship** where one **object (s
 
 #### Simple Example:
 
-```json
+```python
 class Subject: # Represents the subject class
     def __init__(self):
         self._observers = [] # Protected attribute
@@ -2551,7 +2551,7 @@ class Subject: # Represents the subject class
 
 The subject keeps the list of observers and can notify all of them at once. Create simple observer classes:
 
-```json
+```python
 class EmailNotifier:
     def update(self, message):
         print(f"Email sent: {message}")
@@ -2564,7 +2564,7 @@ class SMSNotifier:
 Note that each observer has an `update()` method that gets called when notified!
 Now we use the observer pattern:
 
-```json
+```python
 # Create subject
 news = Subject()
 
@@ -2584,7 +2584,7 @@ news.notify("Breaking news: Python is awesome!")
 
 We create a practical example with a stock price tracker:
 
-```json
+```python
 class Stock: # Represents the subject class
     def __init__(self, symbol, price):
         self.symbol = symbol
@@ -2623,7 +2623,7 @@ apple_stock.set_price(155)  # Notifies all investors
 
 Output:
 
-```json
+```python
 Email sent: Breaking news: Python is awesome!
 SMS sent: Breaking news: Python is awesome!
 Alice notified: AAPL is now $155
@@ -2658,7 +2658,7 @@ The strategy pattern defines a family of algorithms, encapsulates each one, and 
 
 Here are simple strategy classes for different payment methods:
 
-```json
+```python
 class CreditCard: # Strategy classes with their own distinct algorithms
     def pay(self, amount):
         return f"Paid ${amount} with Credit Card"
@@ -2674,7 +2674,7 @@ class Bitcoin:
 
 Note that each strategy class implements their own `pay()` method, but with different behaviors. Let's create a context class that uses strategies:
 
-```json
+```python
 class ShoppingCart: # Context class for utilizing strategy classes/instances
     def __init__(self):
         self.total = 0
@@ -2692,7 +2692,7 @@ class ShoppingCart: # Context class for utilizing strategy classes/instances
 
 The Context class can switch from different payment strategies, now we use the strategy pattern:
 
-```json
+```python
 # Create the context instance for strategy manipulation
 cart = ShoppingCart()
 cart.add_item(50)
@@ -2709,7 +2709,7 @@ print(cart.checkout())
 
 Output:
 
-```json
+```python
 Paid $80 with Credit Card
 Paid $80 with PayPal
 ```
@@ -2718,7 +2718,7 @@ Paid $80 with PayPal
 
 Here, we create a sorting strategy:
 
-```json
+```python
 # Two strategy classes
 class BubbleSort:
     def sort(self, data):
@@ -2751,7 +2751,7 @@ print(sorter.sort_data(numbers))
 
 Output:
 
-```json
+```python
 Bubble sorted: [1, 1, 3, 4, 5]
 Quick sorted: [1, 1, 3, 4, 5]
 ```
@@ -2801,7 +2801,7 @@ The command pattern encapsulates a request as an object, allowing you to queue o
 
 Here are simple command classes:
 
-```json
+```python
 # Command Classes
 class Command:
     def execute(self):
@@ -2826,7 +2826,7 @@ class LightOffCommand(Command):
 Each command (class) encapsulates a specific operation on a receiver object:
 Let's create the receiver that actually performs the work:
 
-```json
+```python
 # Receiver Class
 class Light:
     def turn_on(self):
@@ -2838,7 +2838,7 @@ class Light:
 
 Then create an evoker that executes commands:
 
-```json
+```python
 # Evoker Class
 class RemoteControl:
     def __init__(self):
@@ -2853,7 +2853,7 @@ class RemoteControl:
 
 Finally, use the command pattern:
 
-```json
+```python
 # 1. Create receiver
 light = Light()
 
@@ -2876,7 +2876,7 @@ remote.press_button()
 
 You can add support for for undo operations:
 
-```json
+```python
 class UndoableCommand(Command):
     def undo(self):
         pass
@@ -2910,7 +2910,7 @@ smart_remote.undo()  # Turns light off
 
 Output:
 
-```json
+```python
 Light is on
 Light is off
 Light is on
@@ -2937,7 +2937,7 @@ Note that the `Command` class in the command pattern is typically used as a **ba
 
 But, it is **best practice** to make the `Command` class as an abstract base class for clarity and safety:
 
-```json
+```python
 from abc import ABC, abstractmethod
 
 class Command(ABC):
@@ -3342,9 +3342,9 @@ class CSVProcessor(DataProcessor):
     def process_data(self):
         print("Processing CSV data")
 
-class JSONProcessor(DataProcessor):
+class pythonProcessor(DataProcessor):
     def process_data(self):
-        print("Processing JSON data")
+        print("Processing python data")
 ```
 
 > [!NOTE]
@@ -3358,8 +3358,8 @@ csv_processor.process()
 
 print()  # Empty line
 
-json_processor = JSONProcessor()
-json_processor.process()
+python_processor = pythonProcessor()
+python_processor.process()
 ```
 
 Output:
@@ -3370,7 +3370,7 @@ Processing CSV data
 Saving data...
 
 Reading data...
-Processing JSON data
+Processing python data
 Saving data...
 ```
 
@@ -3504,7 +3504,7 @@ class DataProcessor(ABC):
 
 #### Real-World Examples:
 
-- Data processing: Reading, processing and saving data (CBS, JSON, XML);
+- Data processing: Reading, processing and saving data (CBS, python, XML);
 - Games: Defining game flow (start, play, end) with different rules for each game;
 - Document generation: Steps for preparing formatting and exporting documents;
 - Web frameworks: Request handling pipeline with customizable hooks.
